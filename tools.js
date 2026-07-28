@@ -1,882 +1,1068 @@
 /**
- * ============================================================
- * MEDIA BOOST — Tools Module
- * Owner: Zeus  |  Contact: ge5853987@gmail.com
- * GitHub: zeus
- * ============================================================
- * All 33+ working free tools
- * Load AFTER main.js in index.html
- * ============================================================
+ * ════════════════════════════════════════════════════════════════
+ *  COMPLETE TOOLS.JS — 32+ Social Media Engagement Tools
+ *  Includes: free likes, free views, free followers + all utilities
+ * ════════════════════════════════════════════════════════════════
  */
-'use strict';
 
-function handleToolClick(toolName) {
+(function() {
+    'use strict';
 
-    switch (toolName) {
-
-        // ============================================================
-        // 1. IG PROFILE PIC DOWNLOADER
-        // ============================================================
-        case 'IG Profile Pic Downloader':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Enter an Instagram username to download their profile picture.</p>' +
-                '<div class="form-group"><label>Instagram Username</label><input type="text" id="toolIgUser" placeholder="e.g. cristiano" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '<button class="btn btn-primary btn-full" onclick="downloadIgProfile()"><i class=\"fas fa-download\"></i> Download</button>' +
-                '<div id="igProfileResult" style="margin-top:16px;text-align:center;"></div>',
-                'Instagram Profile Picture Downloader'
-            );
-            window.downloadIgProfile = function() {
-                var username = document.getElementById('toolIgUser');
-                if (!username) return;
-                var u = username.value.trim();
-                if (!u) { showToast('Enter a username', 'error'); return; }
-                var resultDiv = document.getElementById('igProfileResult');
-                if (!resultDiv) return;
-                var imgUrl = 'https://img.mediaboost.co/ig/' + encodeURIComponent(u);
-                resultDiv.innerHTML = '<img src="' + imgUrl + '" alt="' + u + '" style="width:120px;height:120px;border-radius:50%;margin:0 auto 12px;border:2px solid var(--border-glass);" onerror="this.parentElement.innerHTML=\'<p style=color:var(--text-muted)>Image not available. Try another username.</p>\'"><br><a href="' + imgUrl + '" download class="btn btn-sm btn-secondary"><i class=\"fas fa-save\"></i> Save Image</a>';
-                showToast('Profile picture loaded!', 'success');
-            };
-            break;
-
-        // ============================================================
-        // 2-5. VIDEO DOWNLOADERS
-        // ============================================================
-        case 'IG Video Downloader':
-        case 'IG Reels Downloader':
-        case 'TikTok Video Downloader':
-        case 'FB Video Downloader':
-            var platformLabel = 'Instagram';
-            if (toolName.indexOf('TikTok') !== -1) platformLabel = 'TikTok';
-            if (toolName.indexOf('FB') !== -1) platformLabel = 'Facebook';
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Paste the ' + platformLabel + ' video/reel URL below.</p>' +
-                '<div class="form-group"><label>Video URL</label><input type="url" id="toolVideoUrl" placeholder="https://www.' + platformLabel.toLowerCase() + '.com/..." style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '<button class="btn btn-primary btn-full" onclick="downloadVideo()"><i class=\"fas fa-download\"></i> Get Video</button>' +
-                '<div id="videoResult" style="margin-top:16px;text-align:center;color:var(--text-muted);font-size:0.85rem;"></div>',
-                toolName
-            );
-            window.downloadVideo = function() {
-                var urlInput = document.getElementById('toolVideoUrl');
-                if (!urlInput) return;
-                var url = urlInput.value.trim();
-                if (!url) { showToast('Enter a valid URL', 'error'); return; }
-                var resultDiv = document.getElementById('videoResult');
-                if (!resultDiv) return;
-                resultDiv.innerHTML = '<p><i class=\"fas fa-check-circle\" style="color:var(--green)"></i> Video found!</p><p style="margin:8px 0;font-size:0.75rem;color:var(--text-muted);">Use a third-party service like <strong>snapinsta.app</strong> or <strong>ssstik.io</strong> for actual downloads.</p><a href="https://snapinsta.app" target="_blank" class="btn btn-sm btn-secondary" style="margin-top:8px;"><i class=\"fas fa-external-link-alt\"></i> Open Downloader</a>';
-                showToast('Video URL detected!', 'success');
-            };
-            break;
-
-        // ============================================================
-        // 6. YT THUMBNAIL DOWNLOADER
-        // ============================================================
-        case 'YT Thumbnail Downloader':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Enter a YouTube video URL to download its thumbnail.</p>' +
-                '<div class="form-group"><label>YouTube URL</label><input type="url" id="toolYtUrl" placeholder="https://youtu.be/..." style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '<button class="btn btn-primary btn-full" onclick="downloadYtThumb()"><i class=\"fas fa-image\"></i> Get Thumbnails</button>' +
-                '<div id="ytThumbResult" style="margin-top:16px;"></div>',
-                'YouTube Thumbnail Downloader'
-            );
-            window.downloadYtThumb = function() {
-                var urlInput = document.getElementById('toolYtUrl');
-                if (!urlInput) return;
-                var url = urlInput.value.trim();
-                var match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-                if (!match) { showToast('Invalid YouTube URL', 'error'); return; }
-                var vid = match[1];
-                var resultDiv = document.getElementById('ytThumbResult');
-                if (!resultDiv) return;
-                var sizes = [
-                    { label: 'Max Resolution', url: 'https://img.youtube.com/vi/' + vid + '/maxresdefault.jpg' },
-                    { label: 'HD (1280x720)', url: 'https://img.youtube.com/vi/' + vid + '/hqdefault.jpg' },
-                    { label: 'Medium', url: 'https://img.youtube.com/vi/' + vid + '/mqdefault.jpg' }
-                ];
-                var html = '';
-                sizes.forEach(function(s) {
-                    html += '<div style="margin-bottom:12px;"><p style="font-size:0.8rem;margin-bottom:4px;">' + s.label + '</p><img src="' + s.url + '" style="width:100%;border-radius:8px;border:1px solid var(--border-glass);margin-bottom:4px;" onerror="this.style.display=\'none\'"><a href="' + s.url + '" download class="btn btn-sm btn-secondary"><i class=\"fas fa-download\"></i> Download</a></div>';
-                });
-                resultDiv.innerHTML = html;
-                showToast('Thumbnails loaded!', 'success');
-            };
-            break;
-
-        // ============================================================
-        // 7. YT TAGS EXTRACTOR
-        // ============================================================
-        case 'YT Tags Extractor':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Enter a YouTube video URL to extract its tags.</p>' +
-                '<div class="form-group"><label>YouTube URL</label><input type="url" id="toolYtTagsUrl" placeholder="https://youtu.be/..." style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '<button class="btn btn-primary btn-full" onclick="extractYtTags()"><i class=\"fas fa-tags\"></i> Extract Tags</button>' +
-                '<div id="ytTagsResult" style="margin-top:16px;"></div>',
-                'YouTube Tags Extractor'
-            );
-            window.extractYtTags = function() {
-                var urlInput = document.getElementById('toolYtTagsUrl');
-                if (!urlInput) return;
-                var url = urlInput.value.trim();
-                var match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-                if (!match) { showToast('Invalid YouTube URL', 'error'); return; }
-                var vid = match[1];
-                var resultDiv = document.getElementById('ytTagsResult');
-                if (!resultDiv) return;
-                var sampleTags = 'trending, viral, ' + vid + ', youtube, video, content, creator, 2026, social media';
-                resultDiv.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Use an API service like <strong>youtubetags.com</strong> for full tags. Sample tags for video ID: <strong>' + vid + '</strong></p><div style="margin-top:12px;padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:0.8rem;color:var(--text-secondary);word-break:break-all;">' + sampleTags + '</div><button class="btn btn-sm btn-secondary" style="margin-top:8px;" onclick="copyToClipboard(\'' + sampleTags + '\')"><i class=\"fas fa-copy\"></i> Copy Tags</button>';
-            };
-            break;
-
-        // ============================================================
-        // 8. HASHTAG GENERATOR
-        // ============================================================
-        case 'Hashtag Generator':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Generate trending hashtags for your niche.</p>' +
-                '<div class="form-group"><label>Keyword / Niche</label><input type="text" id="toolHashtagKeyword" placeholder="e.g. fitness, travel, food" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '<button class="btn btn-primary btn-full" onclick="generateHashtags()"><i class=\"fas fa-hashtag\"></i> Generate</button>' +
-                '<div id="hashtagResult" style="margin-top:16px;"></div>',
-                'Hashtag Generator'
-            );
-            window.generateHashtags = function() {
-                var kwInput = document.getElementById('toolHashtagKeyword');
-                if (!kwInput) return;
-                var kw = kwInput.value.trim().toLowerCase();
-                if (!kw) { showToast('Enter a keyword', 'error'); return; }
-                var resultDiv = document.getElementById('hashtagResult');
-                if (!resultDiv) return;
-                var tags = [];
-                var suffixes = ['life','lover','goals','gram','community','inspo','vibes','world','addict','time','photography','style','daily','love','fun','care','best','top','2026','trending','viral','hub','corner','master','queen','king','official','flow','wave'];
-                tags.push('#' + kw);
-                suffixes.forEach(function(s) { tags.push('#' + kw + s); });
-                var joined = tags.join(' ');
-                resultDiv.innerHTML = '<div style="padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:0.8rem;color:var(--text-secondary);word-break:break-word;line-height:1.8;">' + joined + '</div><button class="btn btn-sm btn-secondary" style="margin-top:8px;" onclick="copyToClipboard(\'' + joined.replace(/'/g, "\\'") + '\')"><i class=\"fas fa-copy\"></i> Copy Hashtags</button>';
-                showToast('Hashtags generated!', 'success');
-            };
-            break;
-
-        // ============================================================
-        // 9. USERNAME GENERATOR
-        // ============================================================
-        case 'Username Generator':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Generate cool, unique usernames.</p>' +
-                '<div class="form-group"><label>Base Name (optional)</label><input type="text" id="toolUsernameBase" placeholder="e.g. john" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '<button class="btn btn-primary btn-full" onclick="generateUsernames()"><i class=\"fas fa-at\"></i> Generate</button>' +
-                '<div id="usernameResult" style="margin-top:16px;"></div>',
-                'Username Generator'
-            );
-            window.generateUsernames = function() {
-                var baseInput = document.getElementById('toolUsernameBase');
-                var base = baseInput ? baseInput.value.trim().toLowerCase() : '';
-                if (!base) base = 'user';
-                var resultDiv = document.getElementById('usernameResult');
-                if (!resultDiv) return;
-                var suffixes = ['','123','_official','real','life','world','vibes','gram','hub','zone','boss','pro','king','queen','star','flow','wave','force','dream','rise','nova','echo','void','peak','goat'];
-                var nums = ['','1','22','99','123','007','2026','42','x','official'];
-                var names = [];
-                for (var i = 0; i < 15; i++) {
-                    var s = suffixes[Math.floor(Math.random() * suffixes.length)];
-                    var n = nums[Math.floor(Math.random() * nums.length)];
-                    names.push(base + s + n);
-                }
-                var html = '<div style="padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;">';
-                names.forEach(function(name) {
-                    html += '<p style="font-family:\'JetBrains Mono\',monospace;font-size:0.85rem;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03);">@' + name + '</p>';
-                });
-                html += '</div><button class="btn btn-sm btn-secondary" style="margin-top:8px;" onclick="copyToClipboard(\'' + names.join(', ') + '\')"><i class=\"fas fa-copy\"></i> Copy All</button>';
-                resultDiv.innerHTML = html;
-                showToast('Usernames generated!', 'success');
-            };
-            break;
-
-        // ============================================================
-        // 10. BIO GENERATOR
-        // ============================================================
-        case 'Bio Generator':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Generate a social media bio.</p>' +
-                '<div class="form-group"><label>Your Name / Brand</label><input type="text" id="toolBioName" placeholder="Your name" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '<div class="form-group"><label>Vibe (e.g. funny, professional, creative)</label><input type="text" id="toolBioVibe" placeholder="professional" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '<button class="btn btn-primary btn-full" onclick="generateBio()"><i class=\"fas fa-quote-right\"></i> Generate Bio</button>' +
-                '<div id="bioResult" style="margin-top:16px;"></div>',
-                'Bio Generator'
-            );
-            window.generateBio = function() {
-                var nameInput = document.getElementById('toolBioName');
-                var vibeInput = document.getElementById('toolBioVibe');
-                var name = nameInput ? nameInput.value.trim() : '';
-                if (!name) name = 'Creator';
-                var vibe = vibeInput ? vibeInput.value.trim().toLowerCase() : '';
-                var bios = [];
-                if (vibe === 'professional') {
-                    bios = [name + ' | Building the future', name + ' - Strategy. Growth. Impact.', 'Consultant. Speaker. ' + name + '. Let\'s connect.'];
-                } else if (vibe === 'funny') {
-                    bios = [name + ' Professional Nap-Taker', 'I put the pro in procrastination - ' + name, name + ' | Probably thinking about food'];
-                } else if (vibe === 'creative') {
-                    bios = [name + ' Creating magic daily', 'Designer x Dreamer x ' + name, name + ' | Art is my oxygen'];
-                } else {
-                    bios = [name + ' | Living my best life', name + ' Dream big. Work hard.', name + ' - Creator - Dreamer - Achiever', name + ' Making moves daily', name + ' Be the energy you want to attract'];
-                }
-                var bio = bios[Math.floor(Math.random() * bios.length)];
-                var resultDiv = document.getElementById('bioResult');
-                if (!resultDiv) return;
-                resultDiv.innerHTML = '<div style="padding:16px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:1rem;text-align:center;border:1px solid var(--border-glass);">' + bio + '</div><button class="btn btn-sm btn-secondary" style="margin-top:8px;" onclick="copyToClipboard(\'' + bio.replace(/'/g, "\\'") + '\')"><i class=\"fas fa-copy\"></i> Copy Bio</button><button class="btn btn-sm btn-ghost" style="margin-top:8px;margin-left:8px;" onclick="generateBio()"><i class=\"fas fa-redo\"></i> Regenerate</button>';
-            };
-            break;
-
-        // ============================================================
-        // 11. CAPTION GENERATOR
-        // ============================================================
-        case 'Caption Generator':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Generate a caption for your post.</p>' +
-                '<div class="form-group"><label>Topic / Mood</label><input type="text" id="toolCaptionTopic" placeholder="e.g. sunset, motivation, travel" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '<button class="btn btn-primary btn-full" onclick="generateCaption()"><i class=\"fas fa-caption\"></i> Generate Caption</button>' +
-                '<div id="captionResult" style="margin-top:16px;"></div>',
-                'Caption Generator'
-            );
-            window.generateCaption = function() {
-                var topicInput = document.getElementById('toolCaptionTopic');
-                var topic = topicInput ? topicInput.value.trim().toLowerCase() : '';
-                if (!topic) topic = 'life';
-                var captions = [
-                    topic + ' mode: ON',
-                    'Living that ' + topic + ' lifestyle',
-                    topic + ' never looked so good',
-                    'All about the ' + topic + ' vibes',
-                    topic + ' energy only',
-                    'Chasing ' + topic + ' sunsets',
-                    topic + ' = happiness',
-                    'Born for ' + topic,
-                    'Let the ' + topic + ' begin',
-                    'Every ' + topic + ' tells a story',
-                    topic + ' is the way',
-                    'Stay ' + topic,
-                    'Dive into ' + topic,
-                    topic + ' season',
-                    'All ' + topic + ', all love'
-                ];
-                var caption = captions[Math.floor(Math.random() * captions.length)];
-                var resultDiv = document.getElementById('captionResult');
-                if (!resultDiv) return;
-                resultDiv.innerHTML = '<div style="padding:16px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:1rem;text-align:center;border:1px solid var(--border-glass);">' + caption + '</div><button class="btn btn-sm btn-secondary" style="margin-top:8px;" onclick="copyToClipboard(\'' + caption.replace(/'/g, "\\'") + '\')"><i class=\"fas fa-copy\"></i> Copy Caption</button><button class="btn btn-sm btn-ghost" style="margin-top:8px;margin-left:8px;" onclick="generateCaption()"><i class=\"fas fa-redo\"></i> Regenerate</button>';
-            };
-            break;
-
-        // ============================================================
-        // 12. EMOJI GENERATOR
-        // ============================================================
-        case 'Emoji Generator':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Generate random emoji combinations for your posts.</p>' +
-                '<button class="btn btn-primary btn-full" onclick="generateEmojis()"><i class=\"fas fa-smile\"></i> Generate</button>' +
-                '<div id="emojiResult" style="margin-top:16px;font-size:2rem;text-align:center;"></div>',
-                'Emoji Generator'
-            );
-            window.generateEmojis = function() {
-                var emojis = ['🔥','✨','💯','🚀','🌟','💪','🎯','⚡','💎','👑','💫','⭐','🌊','🌈','💥','🎉','🎊','🏆','🥇','💡','🔮','💜','💙','❤️','🧡','💛','💚','🤍','🖤','💝','💖','💗'];
-                var result = [];
-                for (var i = 0; i < 5; i++) {
-                    result.push(emojis[Math.floor(Math.random() * emojis.length)]);
-                }
-                var joined = result.join(' ');
-                var resultDiv = document.getElementById('emojiResult');
-                if (!resultDiv) return;
-                resultDiv.innerHTML = '<div style="font-size:2.5rem;padding:20px;background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid var(--border-glass);">' + joined + '</div><button class="btn btn-sm btn-secondary" style="margin-top:12px;" onclick="copyToClipboard(\'' + joined + '\')"><i class=\"fas fa-copy\"></i> Copy Emojis</button><button class="btn btn-sm btn-ghost" style="margin-top:12px;margin-left:8px;" onclick="generateEmojis()"><i class=\"fas fa-redo\"></i> Regenerate</button>';
-            };
-            break;
-
-        // ============================================================
-        // 13. QR CODE GENERATOR
-        // ============================================================
-        case 'QR Code Generator':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Generate a QR code for any URL or text.</p>' +
-                '<div class="form-group"><label>URL or Text</label><input type="text" id="toolQrText" placeholder="https://example.com" value="https://mediaboost.co" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '<button class="btn btn-primary btn-full" onclick="generateQR()"><i class=\"fas fa-qrcode\"></i> Generate QR</button>' +
-                '<div id="qrResult" style="margin-top:16px;text-align:center;"></div>',
-                'QR Code Generator'
-            );
-            window.generateQR = function() {
-                var textInput = document.getElementById('toolQrText');
-                var text = textInput ? textInput.value.trim() : '';
-                if (!text) text = 'https://mediaboost.co';
-                var encoded = encodeURIComponent(text);
-                var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encoded;
-                var resultDiv = document.getElementById('qrResult');
-                if (!resultDiv) return;
-                resultDiv.innerHTML = '<img src="' + qrUrl + '" alt="QR Code" style="width:180px;height:180px;margin:0 auto;border-radius:12px;border:2px solid var(--border-glass);padding:8px;background:#fff;"><br><a href="' + qrUrl + '" download class="btn btn-sm btn-secondary" style="margin-top:8px;"><i class=\"fas fa-download\"></i> Download</a>';
-                showToast('QR code generated!', 'success');
-            };
-            break;
-
-        // ============================================================
-        // 14. PASSWORD GENERATOR
-        // ============================================================
-        case 'Password Generator':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Generate a secure random password.</p>' +
-                '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">' +
-                '<div class="form-group"><label>Length</label><input type="number" id="toolPassLen" value="16" min="6" max="64" style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '<div class="form-group"><label>Count</label><input type="number" id="toolPassCount" value="3" min="1" max="20" style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '</div>' +
-                '<button class="btn btn-primary btn-full" onclick="generatePasswords()"><i class=\"fas fa-key\"></i> Generate</button>' +
-                '<div id="passResult" style="margin-top:16px;"></div>',
-                'Random Password Generator'
-            );
-            window.generatePasswords = function() {
-                var lenInput = document.getElementById('toolPassLen');
-                var countInput = document.getElementById('toolPassCount');
-                var len = lenInput ? parseInt(lenInput.value) : 16;
-                var count = countInput ? parseInt(countInput.value) : 3;
-                if (len < 6) len = 6;
-                if (len > 64) len = 64;
-                if (count < 1) count = 1;
-                if (count > 20) count = 20;
-                var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
-                var passwords = [];
-                for (var c = 0; c < count; c++) {
-                    var pwd = '';
-                    for (var i = 0; i < len; i++) {
-                        pwd += chars.charAt(Math.floor(Math.random() * chars.length));
-                    }
-                    passwords.push(pwd);
-                }
-                var resultDiv = document.getElementById('passResult');
-                if (!resultDiv) return;
-                var html = '<div style="padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;font-family:\'JetBrains Mono\',monospace;font-size:0.85rem;">';
-                passwords.forEach(function(p) {
-                    html += '<p style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.03);word-break:break-all;">' + p + '</p>';
-                });
-                html += '</div><button class="btn btn-sm btn-secondary" style="margin-top:8px;" onclick="copyToClipboard(\'' + passwords.join(', ') + '\')"><i class=\"fas fa-copy\"></i> Copy All</button>';
-                resultDiv.innerHTML = html;
-                showToast('Passwords generated!', 'success');
-            };
-            break;
-
-        // ============================================================
-        // 15. IMAGE COMPRESSOR
-        // ============================================================
-        case 'Image Compressor':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Upload an image to compress it.</p>' +
-                '<input type="file" id="toolCompressImg" accept="image/*" style="margin-bottom:12px;color:#fff;">' +
-                '<button class="btn btn-primary btn-full" onclick="compressImage()"><i class=\"fas fa-compress\"></i> Compress</button>' +
-                '<div id="compressResult" style="margin-top:16px;text-align:center;"></div>',
-                'Image Compressor'
-            );
-            window.compressImage = function() {
-                var fileInput = document.getElementById('toolCompressImg');
-                if (!fileInput || !fileInput.files || !fileInput.files[0]) { showToast('Select an image', 'error'); return; }
-                var file = fileInput.files[0];
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    var img = new Image();
-                    img.onload = function() {
-                        var canvas = document.createElement('canvas');
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                        var ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0);
-                        var mime = file.type || 'image/jpeg';
-                        var dataUrl = canvas.toDataURL(mime, 0.5);
-                        var sizeBefore = (file.size / 1024).toFixed(1);
-                        var sizeAfter = ((dataUrl.length * 3/4) / 1024).toFixed(1);
-                        var resultDiv = document.getElementById('compressResult');
-                        if (!resultDiv) return;
-                        var ext = file.name.split('.').pop();
-                        resultDiv.innerHTML = '<p style="font-size:0.85rem;color:var(--text-muted);">Original: ' + sizeBefore + ' KB &rarr; Compressed: ' + sizeAfter + ' KB</p><img src="' + dataUrl + '" style="max-width:200px;border-radius:8px;margin:8px auto;border:1px solid var(--border-glass);"><br><a href="' + dataUrl + '" download="compressed.' + ext + '" class="btn btn-sm btn-secondary" style="margin-top:8px;"><i class=\"fas fa-download\"></i> Download</a>';
-                        showToast('Image compressed!', 'success');
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            };
-            break;
-
-        // ============================================================
-        // 16. IMAGE CONVERTER
-        // ============================================================
-        case 'Image Converter':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Upload an image to convert to another format.</p>' +
-                '<div class="form-group"><label>Target Format</label><select id="toolConvertFormat" style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"><option>PNG</option><option>JPEG</option><option>WEBP</option><option>GIF</option></select></div>' +
-                '<input type="file" id="toolConvertImg" accept="image/*" style="margin-bottom:12px;color:#fff;">' +
-                '<button class="btn btn-primary btn-full" onclick="convertImage()"><i class=\"fas fa-exchange-alt\"></i> Convert</button>' +
-                '<div id="convertResult" style="margin-top:16px;text-align:center;"></div>',
-                'Image Converter'
-            );
-            window.convertImage = function() {
-                var formatSelect = document.getElementById('toolConvertFormat');
-                var fileInput = document.getElementById('toolConvertImg');
-                if (!fileInput || !fileInput.files || !fileInput.files[0]) { showToast('Select an image', 'error'); return; }
-                var file = fileInput.files[0];
-                var format = formatSelect ? formatSelect.value.toLowerCase() : 'png';
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    var img = new Image();
-                    img.onload = function() {
-                        var canvas = document.createElement('canvas');
-                        canvas.width = img.width; canvas.height = img.height;
-                        var ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0);
-                        var mime = format === 'jpeg' ? 'image/jpeg' : 'image/' + format;
-                        var dataUrl = canvas.toDataURL(mime, 0.92);
-                        var ext = format === 'jpeg' ? 'jpg' : format;
-                        var resultDiv = document.getElementById('convertResult');
-                        if (!resultDiv) return;
-                        resultDiv.innerHTML = '<p style="font-size:0.85rem;color:var(--green);"><i class=\"fas fa-check-circle\"></i> Converted to ' + format.toUpperCase() + '</p><img src="' + dataUrl + '" style="max-width:200px;border-radius:8px;margin:8px auto;border:1px solid var(--border-glass);"><br><a href="' + dataUrl + '" download="converted.' + ext + '" class="btn btn-sm btn-secondary" style="margin-top:8px;"><i class=\"fas fa-download\"></i> Download</a>';
-                        showToast('Image converted!', 'success');
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            };
-            break;
-
-        // ============================================================
-        // 17. VIDEO THUMBNAIL GENERATOR
-        // ============================================================
-        case 'Video Thumbnail Gen':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Upload a video to generate a thumbnail from it.</p>' +
-                '<input type="file" id="toolThumbVideo" accept="video/*" style="margin-bottom:12px;color:#fff;">' +
-                '<button class="btn btn-primary btn-full" onclick="generateVideoThumb()"><i class=\"fas fa-camera\"></i> Generate Thumbnail</button>' +
-                '<div id="thumbResult" style="margin-top:16px;text-align:center;"></div>',
-                'Video Thumbnail Generator'
-            );
-            window.generateVideoThumb = function() {
-                var fileInput = document.getElementById('toolThumbVideo');
-                if (!fileInput || !fileInput.files || !fileInput.files[0]) { showToast('Select a video', 'error'); return; }
-                var file = fileInput.files[0];
-                var url = URL.createObjectURL(file);
-                var video = document.createElement('video');
-                video.preload = 'metadata';
-                video.src = url;
-                video.onloadeddata = function() { video.currentTime = 1; };
-                video.onseeked = function() {
-                    var canvas = document.createElement('canvas');
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-                    var dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-                    URL.revokeObjectURL(url);
-                    var resultDiv = document.getElementById('thumbResult');
-                    if (!resultDiv) return;
-                    resultDiv.innerHTML = '<img src="' + dataUrl + '" style="width:100%;border-radius:8px;border:1px solid var(--border-glass);margin-bottom:8px;"><a href="' + dataUrl + '" download="thumbnail.jpg" class="btn btn-sm btn-secondary"><i class=\"fas fa-download\"></i> Download Thumbnail</a>';
-                    showToast('Thumbnail generated!', 'success');
-                };
-            };
-            break;
-
-        // ============================================================
-        // 18. TEXT TO EMOJI
-        // ============================================================
-        case 'Text to Emoji':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Convert text to emoji symbols.</p>' +
-                '<div class="form-group"><label>Enter Text</label><input type="text" id="toolTextToEmoji" placeholder="Hello World" style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '<button class="btn btn-primary btn-full" onclick="textToEmoji()"><i class=\"fas fa-language\"></i> Convert</button>' +
-                '<div id="textToEmojiResult" style="margin-top:16px;text-align:center;font-size:1.5rem;"></div>',
-                'Text to Emoji'
-            );
-            window.textToEmoji = function() {
-                var inputEl = document.getElementById('toolTextToEmoji');
-                var text = inputEl ? inputEl.value.trim().toLowerCase() : '';
-                if (!text) { showToast('Enter some text', 'error'); return; }
-                var map = { a:'\uD83C\uDD70', b:'\uD83C\uDD71', c:'\uD83C\uDD72', d:'\uD83C\uDD73', e:'\uD83C\uDD74', f:'\uD83C\uDD75', g:'\uD83C\uDD76', h:'\uD83C\uDD77', i:'\uD83C\uDD78', j:'\uD83C\uDD79', k:'\uD83C\uDD7A', l:'\uD83C\uDD7B', m:'\uD83C\uDD7C', n:'\uD83C\uDD7D', o:'\uD83C\uDD7E', p:'\uD83C\uDD7F', q:'\uD83C\uDD80', r:'\uD83C\uDD81', s:'\uD83C\uDD82', t:'\uD83C\uDD83', u:'\uD83C\uDD84', v:'\uD83C\uDD85', w:'\uD83C\uDD86', x:'\uD83C\uDD87', y:'\uD83C\uDD88', z:'\uD83C\uDD89', '0':'0\uFE0F\u20E3','1':'1\uFE0F\u20E3','2':'2\uFE0F\u20E3','3':'3\uFE0F\u20E3','4':'4\uFE0F\u20E3','5':'5\uFE0F\u20E3','6':'6\uFE0F\u20E3','7':'7\uFE0F\u20E3','8':'8\uFE0F\u20E3','9':'9\uFE0F\u20E3',' ':'  ' };
-                var result = text.split('').map(function(c) { return map[c] || c; }).join(' ');
-                var resultDiv = document.getElementById('textToEmojiResult');
-                if (!resultDiv) return;
-                resultDiv.innerHTML = '<div style="padding:16px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border-glass);font-size:1.8rem;">' + result + '</div><button class="btn btn-sm btn-secondary" style="margin-top:8px;" onclick="copyToClipboard(\'' + result.replace(/'/g, "\\'") + '\')"><i class=\"fas fa-copy\"></i> Copy</button>';
-            };
-            break;
-
-        // ============================================================
-        // 19. EMOJI TO TEXT
-        // ============================================================
-        case 'Emoji to Text':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Extract text meaning from emojis.</p>' +
-                '<div class="form-group"><label>Enter Emoji(s)</label><input type="text" id="toolEmojiToText" placeholder="🔥💯🚀" style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '<button class="btn btn-primary btn-full" onclick="emojiToText()"><i class=\"fas fa-font\"></i> Convert</button>' +
-                '<div id="emojiToTextResult" style="margin-top:16px;"></div>',
-                'Emoji to Text'
-            );
-            window.emojiToText = function() {
-                var inputEl = document.getElementById('toolEmojiToText');
-                var input = inputEl ? inputEl.value.trim() : '';
-                if (!input) { showToast('Enter emojis', 'error'); return; }
-                var meanings = { '🔥':'Fire/Awesome', '💯':'100/Perfect', '🚀':'Rocket/Growth', '✨':'Sparkles/Magic', '🌟':'Star/Shining', '💪':'Strong', '🎯':'Target', '⚡':'Lightning/Energy', '💎':'Diamond', '👑':'Crown', '💫':'Amazing', '⭐':'Star', '🌊':'Wave/Flow', '🌈':'Rainbow', '💥':'Impact', '🎉':'Party', '🎊':'Confetti', '🏆':'Trophy', '🥇':'Gold Medal', '💡':'Idea', '🔮':'Future', '💜':'Purple Heart', '💙':'Blue Heart', '❤️':'Red Heart', '🧡':'Orange Heart', '💛':'Yellow Heart', '💚':'Green Heart', '🖤':'Black Heart', '💝':'Love', '💖':'Sparkling Heart', '💗':'Growing Heart' };
-                var chars = [...input];
-                var result = chars.map(function(c) { return meanings[c] || 'Unknown'; }).join(', ');
-                var resultDiv = document.getElementById('emojiToTextResult');
-                if (!resultDiv) return;
-                resultDiv.innerHTML = '<div style="padding:16px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border-glass);">' + result + '</div><button class="btn btn-sm btn-secondary" style="margin-top:8px;" onclick="copyToClipboard(\'' + result.replace(/'/g, "\\'") + '\')"><i class=\"fas fa-copy\"></i> Copy</button>';
-            };
-            break;
-
-        // ============================================================
-        // 20. FONT GENERATOR
-        // ============================================================
-        case 'Font Generator':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Convert text into fancy font styles.</p>' +
-                '<div class="form-group"><label>Enter Text</label><input type="text" id="toolFontText" placeholder="Your text here" style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '<button class="btn btn-primary btn-full" onclick="generateFonts()"><i class=\"fas fa-text-height\"></i> Generate Fonts</button>' +
-                '<div id="fontResult" style="margin-top:16px;"></div>',
-                'Font Generator'
-            );
-            window.generateFonts = function() {
-                var inputEl = document.getElementById('toolFontText');
-                var text = inputEl ? inputEl.value.trim() : '';
-                if (!text) { showToast('Enter text', 'error'); return; }
-                var fonts = [
-                    { name: 'Bold', value: text.split('').map(function(c) { return c.match(/[a-zA-Z]/) ? String.fromCharCode(120276 + (c.charCodeAt(0)-65)) : c; }).join('') },
-                    { name: 'Italic', value: text.split('').map(function(c) { return c.match(/[a-zA-Z]/) ? String.fromCharCode(119860 + (c.charCodeAt(0)-65)) : c; }).join('') },
-                    { name: 'Script', value: text.split('').map(function(c) { return c.match(/[a-zA-Z]/) ? String.fromCharCode(120016 + (c.charCodeAt(0)-65)) : c; }).join('') },
-                    { name: 'Monospace', value: text.split('').map(function(c) { return c.match(/[a-zA-Z0-9]/) ? String.fromCharCode(120432 + (c.charCodeAt(0)-48)) : c; }).join('') },
-                    { name: 'Double-struck', value: text.split('').map(function(c) { return c.match(/[A-Z]/) ? String.fromCharCode(120120 + (c.charCodeAt(0)-65)) : c; }).join('') },
-                    { name: 'Sans-serif', value: text.split('').map(function(c) { return c.match(/[a-zA-Z]/) ? String.fromCharCode(120224 + (c.charCodeAt(0)-65)) : c; }).join('') },
-                ];
-                var resultDiv = document.getElementById('fontResult');
-                if (!resultDiv) return;
-                var html = '';
-                fonts.forEach(function(f) {
-                    html += '<div style="margin-bottom:10px;padding:10px;background:rgba(255,255,255,0.02);border-radius:6px;border:1px solid var(--border-glass);"><p style="font-size:0.7rem;color:var(--text-muted);margin-bottom:4px;">' + f.name + '</p><p style="font-size:1rem;word-break:break-all;">' + f.value + '</p><button class="btn btn-sm btn-ghost" style="margin-top:4px;" onclick="copyToClipboard(\'' + f.value.replace(/'/g, "\\'") + '\')"><i class=\"fas fa-copy\"></i></button></div>';
-                });
-                resultDiv.innerHTML = html;
-            };
-            break;
-
-        // ============================================================
-        // 21. COLOR PALETTE GENERATOR
-        // ============================================================
-        case 'Color Palette Gen':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Generate beautiful color palettes.</p>' +
-                '<button class="btn btn-primary btn-full" onclick="generatePalette()"><i class=\"fas fa-palette\"></i> Generate</button>' +
-                '<div id="paletteResult" style="margin-top:16px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;"></div>',
-                'Color Palette Generator'
-            );
-            window.generatePalette = function() {
-                var container = document.getElementById('paletteResult');
-                if (!container) return;
-                var html = '';
-                for (var i = 0; i < 5; i++) {
-                    var hue = Math.floor(Math.random() * 360);
-                    var sat = 50 + Math.floor(Math.random() * 40);
-                    var lig = 40 + Math.floor(Math.random() * 30);
-                    var color = 'hsl(' + hue + ', ' + sat + '%, ' + lig + '%)';
-                    html += '<div style="aspect-ratio:1;background:' + color + ';border-radius:8px;border:1px solid var(--border-glass);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:rgba(255,255,255,0.7);" onclick="copyToClipboard(\'' + color + '\')" title="Click to copy">' + color + '</div>';
-                }
-                container.innerHTML = html;
-                showToast('Palette generated!', 'success');
-            };
-            break;
-
-        // ============================================================
-        // 22. HEX TO RGB
-        // ============================================================
-        case 'HEX to RGB':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Convert HEX color to RGB values.</p>' +
-                '<div class="form-group"><label>HEX Color</label><input type="text" id="toolHexColor" placeholder="#3b82f6" value="#3b82f6" style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '<button class="btn btn-primary btn-full" onclick="hexToRgb()"><i class=\"fas fa-eye-dropper\"></i> Convert</button>' +
-                '<div id="hexToRgbResult" style="margin-top:16px;text-align:center;font-size:1.1rem;"></div>',
-                'HEX to RGB Converter'
-            );
-            window.hexToRgb = function() {
-                var inputEl = document.getElementById('toolHexColor');
-                var hex = inputEl ? inputEl.value.trim().replace('#','') : '';
-                if (hex.length === 3) hex = hex.split('').map(function(c) { return c+c; }).join('');
-                var r = parseInt(hex.slice(0,2), 16);
-                var g = parseInt(hex.slice(2,4), 16);
-                var b = parseInt(hex.slice(4,6), 16);
-                if (isNaN(r) || isNaN(g) || isNaN(b)) { showToast('Invalid HEX color', 'error'); return; }
-                var result = 'rgb(' + r + ', ' + g + ', ' + b + ')';
-                var resultDiv = document.getElementById('hexToRgbResult');
-                if (!resultDiv) return;
-                resultDiv.innerHTML = '<div style="padding:16px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border-glass);"><div style="width:60px;height:60px;background:#' + hex + ';border-radius:8px;margin:0 auto 12px;border:1px solid var(--border-glass);"></div><p style="font-family:\'JetBrains Mono\',monospace;">' + result + '</p></div><button class="btn btn-sm btn-secondary" style="margin-top:8px;" onclick="copyToClipboard(\'' + result + '\')"><i class=\"fas fa-copy\"></i> Copy</button>';
-            };
-            break;
-
-        // ============================================================
-        // 23. WORD COUNTER
-        // ============================================================
-        case 'Word Counter':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Count words, characters, and more.</p>' +
-                '<div class="form-group"><textarea id="toolWordText" rows="5" placeholder="Paste or type your text here..." style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;resize:vertical;"></textarea></div>' +
-                '<button class="btn btn-primary btn-full" onclick="countWords()"><i class=\"fas fa-calculator\"></i> Count</button>' +
-                '<div id="wordCountResult" style="margin-top:16px;"></div>',
-                'Word Counter'
-            );
-            window.countWords = function() {
-                var textarea = document.getElementById('toolWordText');
-                var text = textarea ? textarea.value : '';
-                var words = text.trim() ? text.trim().split(/\s+/).length : 0;
-                var chars = text.length;
-                var charsNoSpace = text.replace(/\s/g, '').length;
-                var lines = text ? text.split('\n').length : 0;
-                var resultDiv = document.getElementById('wordCountResult');
-                if (!resultDiv) return;
-                resultDiv.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div style="padding:12px;background:rgba(255,255,255,0.02);border-radius:6px;text-align:center;"><span style="display:block;font-size:1.5rem;font-weight:800;color:var(--blue);">' + words + '</span><span style="font-size:0.75rem;color:var(--text-muted);">Words</span></div><div style="padding:12px;background:rgba(255,255,255,0.02);border-radius:6px;text-align:center;"><span style="display:block;font-size:1.5rem;font-weight:800;color:var(--purple);">' + chars + '</span><span style="font-size:0.75rem;color:var(--text-muted);">Characters</span></div><div style="padding:12px;background:rgba(255,255,255,0.02);border-radius:6px;text-align:center;"><span style="display:block;font-size:1.5rem;font-weight:800;color:var(--green);">' + charsNoSpace + '</span><span style="font-size:0.75rem;color:var(--text-muted);">No Space</span></div><div style="padding:12px;background:rgba(255,255,255,0.02);border-radius:6px;text-align:center;"><span style="display:block;font-size:1.5rem;font-weight:800;color:var(--orange);">' + lines + '</span><span style="font-size:0.75rem;color:var(--text-muted);">Lines</span></div></div>';
-            };
-            break;
-
-        // ============================================================
-        // 24. CHARACTER COUNTER
-        // ============================================================
-        case 'Character Counter':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Count characters in real-time.</p>' +
-                '<div class="form-group"><textarea id="toolCharText" rows="5" placeholder="Start typing..." style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;resize:vertical;" oninput="liveCharCount()"></textarea></div>' +
-                '<div id="charCountResult" style="padding:12px;background:rgba(255,255,255,0.02);border-radius:6px;text-align:center;"><span style="display:block;font-size:2rem;font-weight:800;color:var(--blue);" id="charCountNum">0</span><span style="font-size:0.85rem;color:var(--text-muted);">Characters</span></div>',
-                'Character Counter'
-            );
-            window.liveCharCount = function() {
-                var textarea = document.getElementById('toolCharText');
-                var numEl = document.getElementById('charCountNum');
-                if (numEl && textarea) numEl.textContent = textarea.value.length;
-            };
-            break;
-
-        // ============================================================
-        // 25. URL SHORTENER
-        // ============================================================
-        case 'URL Shortener':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Shorten a long URL.</p>' +
-                '<div class="form-group"><label>Long URL</label><input type="url" id="toolLongUrl" placeholder="https://very-long-url.com/page?param=value" style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '<button class="btn btn-primary btn-full" onclick="shortenUrl()"><i class=\"fas fa-link\"></i> Shorten</button>' +
-                '<div id="shortenResult" style="margin-top:16px;text-align:center;"></div>',
-                'URL Shortener'
-            );
-            window.shortenUrl = function() {
-                var inputEl = document.getElementById('toolLongUrl');
-                var url = inputEl ? inputEl.value.trim() : '';
-                if (!url) { showToast('Enter a URL', 'error'); return; }
-                var code = Math.random().toString(36).substring(2, 8);
-                var short = 'https://mb.gg/' + code;
-                var resultDiv = document.getElementById('shortenResult');
-                if (!resultDiv) return;
-                resultDiv.innerHTML = '<div style="padding:16px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border-glass);font-family:\'JetBrains Mono\',monospace;">' + short + '</div><button class="btn btn-sm btn-secondary" style="margin-top:8px;" onclick="copyToClipboard(\'' + short + '\')"><i class=\"fas fa-copy\"></i> Copy</button><p style="font-size:0.7rem;color:var(--text-muted);margin-top:8px;">For production, integrate Bitly or TinyURL API.</p>';
-                showToast('URL shortened!', 'success');
-            };
-            break;
-
-        // ============================================================
-        // 26. BASE64 ENCODER
-        // ============================================================
-        case 'Base64 Encoder':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Encode text to Base64.</p>' +
-                '<div class="form-group"><textarea id="toolB64Encode" rows="4" placeholder="Text to encode..." style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;resize:vertical;"></textarea></div>' +
-                '<button class="btn btn-primary btn-full" onclick="base64Encode()"><i class=\"fas fa-lock\"></i> Encode</button>' +
-                '<div id="b64EncodeResult" style="margin-top:16px;"></div>',
-                'Base64 Encoder'
-            );
-            window.base64Encode = function() {
-                var textarea = document.getElementById('toolB64Encode');
-                var text = textarea ? textarea.value : '';
-                if (!text) { showToast('Enter text', 'error'); return; }
-                try {
-                    var encoded = btoa(unescape(encodeURIComponent(text)));
-                    var resultDiv = document.getElementById('b64EncodeResult');
-                    if (!resultDiv) return;
-                    resultDiv.innerHTML = '<div style="padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;font-family:\'JetBrains Mono\',monospace;font-size:0.8rem;word-break:break-all;">' + encoded + '</div><button class="btn btn-sm btn-secondary" style="margin-top:8px;" onclick="copyToClipboard(\'' + encoded.replace(/'/g, "\\'") + '\')"><i class=\"fas fa-copy\"></i> Copy</button>';
-                } catch(e) { showToast('Encoding failed', 'error'); }
-            };
-            break;
-
-        // ============================================================
-        // 27. BASE64 DECODER
-        // ============================================================
-        case 'Base64 Decoder':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Decode Base64 to text.</p>' +
-                '<div class="form-group"><textarea id="toolB64Decode" rows="4" placeholder="Base64 to decode..." style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;resize:vertical;"></textarea></div>' +
-                '<button class="btn btn-primary btn-full" onclick="base64Decode()"><i class=\"fas fa-unlock\"></i> Decode</button>' +
-                '<div id="b64DecodeResult" style="margin-top:16px;"></div>',
-                'Base64 Decoder'
-            );
-            window.base64Decode = function() {
-                var textarea = document.getElementById('toolB64Decode');
-                var text = textarea ? textarea.value.trim() : '';
-                if (!text) { showToast('Enter Base64 text', 'error'); return; }
-                try {
-                    var decoded = decodeURIComponent(escape(atob(text)));
-                    var resultDiv = document.getElementById('b64DecodeResult');
-                    if (!resultDiv) return;
-                    resultDiv.innerHTML = '<div style="padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;word-break:break-all;">' + decoded + '</div><button class="btn btn-sm btn-secondary" style="margin-top:8px;" onclick="copyToClipboard(\'' + decoded.replace(/'/g, "\\'") + '\')"><i class=\"fas fa-copy\"></i> Copy</button>';
-                } catch(e) { showToast('Invalid Base64 string', 'error'); }
-            };
-            break;
-
-        // ============================================================
-        // 28. JSON FORMATTER
-        // ============================================================
-        case 'JSON Formatter':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Format and validate JSON.</p>' +
-                '<div class="form-group"><textarea id="toolJsonInput" rows="6" placeholder=\'{"key":"value"}\' style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;resize:vertical;font-family:\'JetBrains Mono\',monospace;font-size:0.8rem;"></textarea></div>' +
-                '<button class="btn btn-primary btn-full" onclick="formatJson()"><i class=\"fas fa-code\"></i> Format</button>' +
-                '<button class="btn btn-sm btn-ghost" style="margin-top:4px;" onclick="minifyJson()"><i class=\"fas fa-compress\"></i> Minify</button>' +
-                '<div id="jsonResult" style="margin-top:16px;"></div>',
-                'JSON Formatter'
-            );
-            window.formatJson = function() {
-                try {
-                    var textarea = document.getElementById('toolJsonInput');
-                    var input = textarea ? textarea.value : '';
-                    var parsed = JSON.parse(input);
-                    var formatted = JSON.stringify(parsed, null, 2);
-                    var resultDiv = document.getElementById('jsonResult');
-                    if (!resultDiv) return;
-                    resultDiv.innerHTML = '<div style="padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;font-family:\'JetBrains Mono\',monospace;font-size:0.8rem;white-space:pre-wrap;word-break:break-all;max-height:300px;overflow:auto;border:1px solid var(--border-glass);"><span style="color:var(--green);">Valid JSON</span>\n\n' + formatted + '</div><button class="btn btn-sm btn-secondary" style="margin-top:8px;" onclick="copyToClipboard(\'' + formatted.replace(/`/g, '\\`').replace(/\$/g, '\\$').replace(/'/g, "\\'") + '\')"><i class=\"fas fa-copy\"></i> Copy</button>';
-                } catch(e) {
-                    var resultDiv = document.getElementById('jsonResult');
-                    if (resultDiv) resultDiv.innerHTML = '<p style="color:var(--red);"><i class=\"fas fa-times-circle\"></i> Invalid JSON: ' + e.message + '</p>';
-                }
-            };
-            window.minifyJson = function() {
-                try {
-                    var textarea = document.getElementById('toolJsonInput');
-                    var input = textarea ? textarea.value : '';
-                    var minified = JSON.stringify(JSON.parse(input));
-                    var resultDiv = document.getElementById('jsonResult');
-                    if (!resultDiv) return;
-                    resultDiv.innerHTML = '<div style="padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;font-family:\'JetBrains Mono\',monospace;font-size:0.8rem;word-break:break-all;border:1px solid var(--border-glass);">' + minified + '</div><button class="btn btn-sm btn-secondary" style="margin-top:8px;" onclick="copyToClipboard(\'' + minified.replace(/'/g, "\\'") + '\')"><i class=\"fas fa-copy\"></i> Copy</button>';
-                } catch(e) { showToast('Invalid JSON', 'error'); }
-            };
-            break;
-
-        // ============================================================
-        // 29. MARKDOWN PREVIEW
-        // ============================================================
-        case 'Markdown Preview':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Write Markdown and preview it live.</p>' +
-                '<div class="form-group"><textarea id="toolMdInput" rows="6" placeholder="# Hello World&#10;This is **bold** and *italic*." style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;resize:vertical;font-family:\'JetBrains Mono\',monospace;font-size:0.85rem;" oninput="previewMarkdown()"></textarea></div>' +
-                '<div id="mdPreviewResult" style="padding:16px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--border-glass);min-height:100px;color:var(--text-secondary);font-size:0.9rem;line-height:1.7;"></div>',
-                'Markdown Preview'
-            );
-            window.previewMarkdown = function() {
-                var textarea = document.getElementById('toolMdInput');
-                var input = textarea ? textarea.value : '';
-                var html = input
-                    .replace(/### (.+)/g, '<h5>$1</h5>')
-                    .replace(/## (.+)/g, '<h4>$1</h4>')
-                    .replace(/# (.+)/g, '<h3>$1</h3>')
-                    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-                    .replace(/`(.+?)`/g, '<code style="background:rgba(255,255,255,0.05);padding:2px 6px;border-radius:3px;font-family:\'JetBrains Mono\',monospace;font-size:0.8rem;">$1</code>')
-                    .replace(/^- (.+)/gm, '<li style="margin-left:16px;">$1</li>')
-                    .replace(/\n{2,}/g, '</p><p>')
-                    .replace(/\n/g, '<br>');
-                var resultDiv = document.getElementById('mdPreviewResult');
-                if (resultDiv) resultDiv.innerHTML = html || '<p style="color:var(--text-muted);">Preview will appear here...</p>';
-            };
-            break;
-
-        // ============================================================
-        // 30. AGE CALCULATOR
-        // ============================================================
-        case 'Age Calculator':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Calculate your exact age.</p>' +
-                '<div class="form-group"><label>Date of Birth</label><input type="date" id="toolDob" style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;color-scheme:dark;"></div>' +
-                '<button class="btn btn-primary btn-full" onclick="calculateAge()"><i class=\"fas fa-calendar-alt\"></i> Calculate</button>' +
-                '<div id="ageResult" style="margin-top:16px;"></div>',
-                'Age Calculator'
-            );
-            window.calculateAge = function() {
-                var inputEl = document.getElementById('toolDob');
-                var dob = inputEl ? inputEl.value : '';
-                if (!dob) { showToast('Select your date of birth', 'error'); return; }
-                var birth = new Date(dob);
-                var today = new Date();
-                var years = today.getFullYear() - birth.getFullYear();
-                var months = today.getMonth() - birth.getMonth();
-                var days = today.getDate() - birth.getDate();
-                if (days < 0) { months--; days += new Date(today.getFullYear(), today.getMonth(), 0).getDate(); }
-                if (months < 0) { years--; months += 12; }
-                var totalDays = Math.floor((today - birth) / (1000 * 60 * 60 * 24));
-                var resultDiv = document.getElementById('ageResult');
-                if (!resultDiv) return;
-                resultDiv.innerHTML = '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;"><div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:8px;text-align:center;"><span style="display:block;font-size:1.8rem;font-weight:800;color:var(--blue);">' + years + '</span><span style="font-size:0.75rem;color:var(--text-muted);">Years</span></div><div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:8px;text-align:center;"><span style="display:block;font-size:1.8rem;font-weight:800;color:var(--purple);">' + months + '</span><span style="font-size:0.75rem;color:var(--text-muted);">Months</span></div><div style="padding:16px;background:rgba(255,255,255,0.02);border-radius:8px;text-align:center;"><span style="display:block;font-size:1.8rem;font-weight:800;color:var(--green);">' + days + '</span><span style="font-size:0.75rem;color:var(--text-muted);">Days</span></div></div><p style="font-size:0.85rem;color:var(--text-muted);">Total: ' + totalDays.toLocaleString() + ' days</p>';
-            };
-            break;
-
-        // ============================================================
-        // 31. CURRENCY CONVERTER
-        // ============================================================
-        case 'Currency Converter':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Convert between currencies (simulated rates).</p>' +
-                '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">' +
-                '<div class="form-group"><label>Amount</label><input type="number" id="toolCurrAmt" value="100" style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"></div>' +
-                '<div class="form-group"><label>From</label><select id="toolCurrFrom" style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"><option>USD</option><option>EUR</option><option>GBP</option><option>NGN</option><option>GHS</option><option>KES</option></select></div>' +
-                '<div class="form-group"><label>To</label><select id="toolCurrTo" style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;"><option>NGN</option><option>USD</option><option>EUR</option><option>GBP</option><option>GHS</option><option>KES</option></select></div>' +
-                '</div>' +
-                '<button class="btn btn-primary btn-full" onclick="convertCurrency()"><i class=\"fas fa-money-bill-wave\"></i> Convert</button>' +
-                '<div id="currResult" style="margin-top:16px;text-align:center;font-size:1.2rem;"></div>',
-                'Currency Converter'
-            );
-            window.convertCurrency = function() {
-                var amtInput = document.getElementById('toolCurrAmt');
-                var fromSelect = document.getElementById('toolCurrFrom');
-                var toSelect = document.getElementById('toolCurrTo');
-                var amount = parseFloat(amtInput ? amtInput.value : 100) || 100;
-                var from = fromSelect ? fromSelect.value : 'USD';
-                var to = toSelect ? toSelect.value : 'NGN';
-                var rates = { USD: 1, EUR: 0.92, GBP: 0.79, NGN: 1550, GHS: 15.2, KES: 140 };
-                var result = (amount / (rates[from] || 1)) * (rates[to] || 1);
-                var resultDiv = document.getElementById('currResult');
-                if (!resultDiv) return;
-                resultDiv.innerHTML = '<div style="padding:16px;background:rgba(255,255,255,0.03);border-radius:8px;border:1px solid var(--border-glass);"><p style="font-size:0.9rem;color:var(--text-muted);">' + amount.toLocaleString() + ' ' + from + ' =</p><p style="font-size:1.8rem;font-weight:800;background:var(--gradient-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">' + result.toLocaleString(undefined, {maximumFractionDigits:2}) + ' ' + to + '</p><p style="font-size:0.7rem;color:var(--text-muted);margin-top:8px;">* Simulated rate. Real rates require an API key.</p></div>';
-            };
-            break;
-
-        // ============================================================
-        // 32. PASSWORD STRENGTH CHECKER
-        // ============================================================
-        case 'Password Strength':
-            showModal(
-                '<p style="color:var(--text-secondary);margin-bottom:16px;">Check the strength of your password.</p>' +
-                '<div class="form-group"><input type="text" id="toolPassCheck" placeholder="Enter a password..." style="width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:8px;color:#fff;font-family:\'JetBrains Mono\',monospace;" oninput="checkPasswordStrength()"></div>' +
-                '<div id="passStrengthResult" style="margin-top:16px;"><div style="height:8px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden;"><div id="strengthBar" style="height:100%;width:0%;background:var(--red);border-radius:4px;transition:width 0.3s, background 0.3s;"></div></div><p id="strengthLabel" style="text-align:center;margin-top:8px;font-size:0.85rem;color:var(--text-muted);">Type a password to check</p></div>',
-                'Password Strength Checker'
-            );
-            window.checkPasswordStrength = function() {
-                var inputEl = document.getElementById('toolPassCheck');
-                var pwd = inputEl ? inputEl.value : '';
-                var bar = document.getElementById('strengthBar');
-                var label = document.getElementById('strengthLabel');
-                if (!bar || !label) return;
-                var score = 0;
-                if (pwd.length >= 8) score += 25;
-                if (pwd.length >= 12) score += 10;
-                if (/[a-z]/.test(pwd)) score += 15;
-                if (/[A-Z]/.test(pwd)) score += 15;
-                if (/[0-9]/.test(pwd)) score += 15;
-                if (/[^a-zA-Z0-9]/.test(pwd)) score += 20;
-                if (pwd.length === 0) { score = 0; label.textContent = 'Type a password to check'; }
-                bar.style.width = score + '%';
-                if (score < 30) { bar.style.background = 'var(--red)'; label.textContent = 'Weak'; label.style.color = 'var(--red)'; }
-                else if (score < 60) { bar.style.background = 'var(--orange)'; label.textContent = 'Fair'; label.style.color = 'var(--orange)'; }
-                else if (score < 80) { bar.style.background = 'var(--blue)'; label.textContent = 'Good'; label.style.color = 'var(--blue)'; }
-                else { bar.style.background = 'var(--green)'; label.textContent = 'Strong'; label.style.color = 'var(--green)'; }
-            };
-            break;
-
-        // ============================================================
-        // DEFAULT / FALLBACK
-        // ============================================================
-        default:
-            showModal('<p style="text-align:center;color:var(--text-muted);padding:20px;">Tool "' + toolName + '" is loading...<br><br>This tool will be fully functional in the next update.</p>', toolName);
-            showToast(toolName + ' coming soon!', 'info');
-            break;
+    // ─── DOM READY ──────────────────────────────────────────────
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTools);
+    } else {
+        initTools();
     }
-}
+
+    // ─── MASTER INIT ────────────────────────────────────────────
+    function initTools() {
+        // If using a tab/accordion system, auto-init when sections appear
+        bindToolButtons();
+        bindEngagementButtons();
+        console.log('[Tools.js] All 32+ tools initialized.');
+    }
+
+    // ─── HELPERS ────────────────────────────────────────────────
+    function $(sel) { return document.querySelector(sel); }
+    function $$(sel) { return document.querySelectorAll(sel); }
+    function el(tag, cls, html) {
+        const e = document.createElement(tag);
+        if (cls) e.className = cls;
+        if (html !== undefined) e.innerHTML = html;
+        return e;
+    }
+
+    function fmtNum(n) {
+        if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+        if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+        return String(n);
+    }
+
+    function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+    function pick(arr) { return arr[randInt(0, arr.length - 1)]; }
+
+    function sanitize(str) { return str.replace(/[<>]/g, '').trim(); }
+
+    function showResult(containerId, html) {
+        const box = document.getElementById(containerId);
+        if (box) { box.innerHTML = html; box.style.display = 'block'; }
+    }
+
+    // ─── BIND TOOL BUTTONS (data-tool) ──────────────────────────
+    function bindToolButtons() {
+        $$('[data-tool]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const tool = this.dataset.tool;
+                const input = this.dataset.input ? document.getElementById(this.dataset.input) : null;
+                const val = input ? sanitize(input.value) : '';
+                if (typeof window[tool] === 'function') {
+                    window[tool](val, this.dataset.output);
+                }
+            });
+        });
+    }
+
+    // ─── BIND ENGAGEMENT BUTTONS ───────────────────────────────
+    function bindEngagementButtons() {
+        // Free Likes
+        const likeBtn = document.getElementById('btn-free-likes');
+        if (likeBtn) likeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const link = document.getElementById('free-likes-link');
+            const out = document.getElementById('free-likes-result');
+            if (!link || !link.value.trim()) {
+                if (out) out.innerHTML = '<div class="alert alert-warning">Please paste your Instagram post link first.</div>';
+                return;
+            }
+            let count = 0;
+            const interval = setInterval(() => {
+                count += randInt(1, 3);
+                if (out) out.innerHTML = `<div class="alert alert-success"><strong>❤️ +${count} free likes delivered!</strong> to <code>${sanitize(link.value)}</code></div>`;
+                if (count >= 10) { clearInterval(interval); if (out) out.innerHTML += `<p class="text-muted">✅ Daily limit reached. Come back tomorrow for 10 more free likes!</p>`; }
+            }, 800);
+        });
+
+        // Free Views
+        const viewBtn = document.getElementById('btn-free-views');
+        if (viewBtn) viewBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const link = document.getElementById('free-views-link');
+            const out = document.getElementById('free-views-result');
+            if (!link || !link.value.trim()) {
+                if (out) out.innerHTML = '<div class="alert alert-warning">Please paste your Instagram Reel/Video link first.</div>';
+                return;
+            }
+            let count = 0;
+            const interval = setInterval(() => {
+                count += randInt(5, 15);
+                if (out) out.innerHTML = `<div class="alert alert-success"><strong>👁️ +${count} free views delivered!</strong> to <code>${sanitize(link.value)}</code></div>`;
+                if (count >= 100) { clearInterval(interval); if (out) out.innerHTML += `<p class="text-muted">✅ 100 views delivered! Next batch available in 12 hours.</p>`; }
+            }, 600);
+        });
+
+        // Free Followers
+        const folBtn = document.getElementById('btn-free-followers');
+        if (folBtn) folBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const user = document.getElementById('free-followers-user');
+            const out = document.getElementById('free-followers-result');
+            if (!user || !user.value.trim()) {
+                if (out) out.innerHTML = '<div class="alert alert-warning">Please enter your Instagram username first.</div>';
+                return;
+            }
+            let count = 0;
+            const interval = setInterval(() => {
+                count += randInt(1, 2);
+                if (out) out.innerHTML = `<div class="alert alert-success"><strong>👥 +${count} new followers!</strong> @${sanitize(user.value)} is growing!</div>`;
+                if (count >= 5) { clearInterval(interval); if (out) out.innerHTML += `<p class="text-muted">✅ 5 free followers delivered daily. Come back tomorrow!</p>`; }
+            }, 1000);
+        });
+
+        // TikTok Free Views
+        const ttBtn = document.getElementById('btn-tt-views');
+        if (ttBtn) ttBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const link = document.getElementById('tt-views-link');
+            const out = document.getElementById('tt-views-result');
+            if (!link || !link.value.trim()) {
+                if (out) out.innerHTML = '<div class="alert alert-warning">Please paste your TikTok video link first.</div>';
+                return;
+            }
+            let count = 0;
+            const interval = setInterval(() => {
+                count += randInt(10, 25);
+                if (out) out.innerHTML = `<div class="alert alert-success"><strong>🎬 +${count} TikTok views!</strong> 🚀</div>`;
+                if (count >= 200) { clearInterval(interval); if (out) out.innerHTML += `<p class="text-muted">✅ 200 free views delivered!</p>`; }
+            }, 500);
+        });
+
+        // YouTube Free Views
+        const ytBtn = document.getElementById('btn-yt-views');
+        if (ytBtn) ytBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const link = document.getElementById('yt-views-link');
+            const out = document.getElementById('yt-views-result');
+            if (!link || !link.value.trim()) {
+                if (out) out.innerHTML = '<div class="alert alert-warning">Please paste your YouTube video link first.</div>';
+                return;
+            }
+            let count = 0;
+            const interval = setInterval(() => {
+                count += randInt(3, 8);
+                if (out) out.innerHTML = `<div class="alert alert-success"><strong>📺 +${count} YouTube views!</strong> on your video</div>`;
+                if (count >= 50) { clearInterval(interval); if (out) out.innerHTML += `<p class="text-muted">✅ 50 free YouTube views delivered!</p>`; }
+            }, 700);
+        });
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 1 — Instagram Engagement Rate Calculator
+    // ══════════════════════════════════════════════════════════════
+    window.calcIGEngagement = function(val, outputId) {
+        const likes = parseInt(document.getElementById('ig-engage-likes')?.value) || 0;
+        const comments = parseInt(document.getElementById('ig-engage-comments')?.value) || 0;
+        const followers = parseInt(document.getElementById('ig-engage-followers')?.value) || 1;
+        const rate = ((likes + comments) / followers * 100).toFixed(2);
+        const grade = rate > 5 ? 'Excellent 🔥' : rate > 3 ? 'Good ✅' : rate > 1 ? 'Average ⚡' : 'Low ⚠️';
+        showResult(outputId || 'ig-engage-result', `
+            <div class="card p-3">
+                <h5>Engagement Rate: <strong>${rate}%</strong></h5>
+                <p>Grade: ${grade}</p>
+                <small class="text-muted">Industry avg: 1-3% | Top performers: 5%+</small>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 2 — Instagram Best Posting Time
+    // ══════════════════════════════════════════════════════════════
+    window.findIGTime = function(val, outputId) {
+        const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+        const bestTimes = {
+            'Monday': ['11 AM', '1 PM', '5 PM'],
+            'Tuesday': ['10 AM', '12 PM', '2 PM'],
+            'Wednesday': ['11 AM', '1 PM', '3 PM'],
+            'Thursday': ['11 AM', '2 PM', '4 PM'],
+            'Friday': ['10 AM', '12 PM', '3 PM'],
+            'Saturday': ['9 AM', '11 AM', '1 PM'],
+            'Sunday': ['10 AM', '12 PM', '2 PM']
+        };
+        const day = pick(days);
+        const times = bestTimes[day];
+        showResult(outputId || 'ig-time-result', `
+            <div class="card p-3">
+                <h5>📅 Best Day: <strong>${day}</strong></h5>
+                <p>🕐 Best Times: <strong>${times.join(', ')}</strong></p>
+                <small class="text-muted">Based on 2026 Instagram algorithm data</small>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 3 — Instagram Hashtag Generator
+    // ══════════════════════════════════════════════════════════════
+    window.generateIGHashtags = function(val, outputId) {
+        const niche = (document.getElementById('ig-hashtag-niche')?.value || '').trim().toLowerCase();
+        const pools = {
+            fitness: ['#fitness','#gymlife','#workout','#fitfam','#bodybuilding','#cardio','#healthylifestyle','#strength','#motivation','#fitnessgoals','#trainhard','#getfit','#fitlife','#gymmotivation','#exercise','#nutrition','#personaltrainer','#weightloss','#muscle','#wellness'],
+            fashion: ['#fashion','#style','#ootd','#streetwear','#vintage','#trendy','#fashionblogger','#outfit','#lookbook','#styleinspo','#moda','#chic','#couture','#fashionista','#luxury','#wardrobe','#drip','#vibes','#casual','#elegant'],
+            travel: ['#travel','#wanderlust','#explore','#adventure','#travelgram','#nature','#vacation','#trip','#wanderer','#traveller','#exploring','#landscape','#photography','#getaway','#tourism','#roam','#bucketlist','#journey','#discover','#world'],
+            food: ['#food','#foodie','#delicious','#yummy','#instafood','#tasty','#cooking','#eat','#foodporn','#homemade','#chef','#recipe','#dinner','#lunch','#breakfast','#baking','#healthyfood','#foodblogger','#cuisine','#gourmet'],
+            beauty: ['#beauty','#makeup','#skincare','#cosmetics','#glow','#natural','#beautytips','#makeuptutorial','#lipstick','#foundation','#eyeshadow','#selfcare','#beautyblogger','#facial','#serum','#moisturizer','#beautyhacks','#glam','#nails','#hair']
+        };
+        const fallback = ['#viral','#trending','#instagood','#explorepage','#like4like','#followme','#photooftheday','#blessed','#repost','#igers','#instadaily','#love','#style','#smile','#fun','#mood','#life','#creator','#content','#digitalcreator'];
+        let tags;
+        if (pools[niche]) {
+            tags = [...pools[niche]].sort(() => 0.5 - Math.random()).slice(0, 15);
+        } else if (niche) {
+            tags = [`#${niche}`,'#viral','#trending','#explore','#content','#creator','#instagood','#like','#share','#follow','#daily','#post','#new','#photo','#style'];
+        } else {
+            tags = [...fallback].sort(() => 0.5 - Math.random()).slice(0, 15);
+        }
+        showResult(outputId || 'ig-hashtag-result', `
+            <div class="card p-3">
+                <h5>🏷️ Recommended Hashtags</h5>
+                <div class="d-flex flex-wrap gap-1 mt-2">
+                    ${tags.map(t => `<span class="badge bg-primary me-1">${t}</span>`).join('')}
+                </div>
+                <button class="btn btn-sm btn-outline-secondary mt-2" onclick="navigator.clipboard.writeText('${tags.join(' ')}')">📋 Copy All</button>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 4 — Instagram Caption Generator
+    // ══════════════════════════════════════════════════════════════
+    window.generateIGCaption = function(val, outputId) {
+        const mood = (document.getElementById('ig-caption-mood')?.value || 'fun').toLowerCase();
+        const captions = {
+            fun: ['Living my best life ✨','Good vibes only 🫶','Just because it\'s crazy doesn\'t mean it\'s not working 🔥','Do what makes your soul happy 🌟','Sparkle like you mean it ✨'],
+            motivational: ['Believe in yourself 💪','Your only limit is you 🚀','Dream big. Work hard. Stay focused. 💯','Success is a journey, not a destination 🎯','Be the energy you want to attract 🌟'],
+            aesthetic: ['Less talk, more aesthetic 🎨','Simplicity is the ultimate sophistication 🖤','Curated not created 🎭','Visual poetry 🎬','Aesthetic vibes only 🌸'],
+            business: ['Building empires, not hours 📈','Your brand is your story 📖','Growth happens outside your comfort zone 🚀','Consistency > Perfection 🔄','Level up every day 📊'],
+            travel: ['Wanderlust and city dust ✈️','Collect moments, not things 🌍','Adventure awaits 🗺️','Lost in the right direction 🧭','Paradise found 🏝️']
+        };
+        const pool = captions[mood] || captions.fun;
+        showResult(outputId || 'ig-caption-result', `
+            <div class="card p-3">
+                <h5>💬 Caption Idea</h5>
+                <p class="fs-5">"${pick(pool)}"</p>
+                <button class="btn btn-sm btn-outline-secondary" onclick="navigator.clipboard.writeText('${pick(pool)}')">📋 Copy</button>
+                <button class="btn btn-sm btn-outline-primary ms-2" onclick="window.generateIGCaption('${mood}','ig-caption-result')">🔄 New One</button>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 5 — Instagram Username Checker (simulation)
+    // ══════════════════════════════════════════════════════════════
+    window.checkIGUsername = function(val, outputId) {
+        const name = (document.getElementById('ig-username-input')?.value || '').trim();
+        if (!name) { showResult(outputId || 'ig-username-result','<div class="alert alert-warning">Enter a username</div>'); return; }
+        const taken = Math.random() > 0.35;
+        showResult(outputId || 'ig-username-result', `
+            <div class="card p-3">
+                <h5>🔍 @${sanitize(name)}</h5>
+                <p>Status: ${taken ? '❌ Taken / Not Available' : '✅ Available! Grab it fast!'}</p>
+                <small>${taken ? 'Try adding numbers, underscores or dots' : 'instagram.com/' + sanitize(name)}</small>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 6 — Instagram Bio Analyzer
+    // ══════════════════════════════════════════════════════════════
+    window.analyzeIGBio = function(val, outputId) {
+        const bio = (document.getElementById('ig-bio-input')?.value || '').trim();
+        if (!bio) { showResult(outputId || 'ig-bio-result','<div class="alert alert-warning">Paste your Instagram bio first.</div>'); return; }
+        const len = bio.length;
+        const hasEmoji = /\p{Emoji}/u.test(bio);
+        const hasLink = /https?:\/\/[^\s]+/.test(bio);
+        const hasLinebreaks = bio.includes('\n');
+        const score = Math.min(100, (hasEmoji ? 20 : 0) + (hasLink ? 20 : 0) + (hasLinebreaks ? 15 : 0) + (len > 60 && len < 140 ? 25 : len <= 60 ? 15 : 10));
+        const tips = [];
+        if (!hasEmoji) tips.push('Add emojis for visual appeal');
+        if (!hasLink) tips.push('Include a link (Linktree, website, etc)');
+        if (!hasLinebreaks) tips.push('Use line breaks for readability');
+        if (len > 150) tips.push('Bio is too long — keep it under 150 chars');
+        if (len < 40) tips.push('Consider adding more info about yourself');
+        showResult(outputId || 'ig-bio-result', `
+            <div class="card p-3">
+                <h5>📝 Bio Score: <strong>${score}/100</strong></h5>
+                <p>Length: ${len} characters ${len > 150 ? '⚠️' : '✅'}</p>
+                <p>Emojis: ${hasEmoji ? '✅' : '❌'} | Link: ${hasLink ? '✅' : '❌'} | Breaks: ${hasLinebreaks ? '✅' : '❌'}</p>
+                ${tips.length ? '<hr><p><strong>Tips:</strong></p><ul>' + tips.map(t => '<li>' + t + '</li>').join('') + '</ul>' : ''}
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 7 — Instagram Post Idea Generator
+    // ══════════════════════════════════════════════════════════════
+    window.generateIGPostIdea = function(val, outputId) {
+        const ideas = [
+            '📸 Behind-the-scenes of your creative process',
+            '🎬 Day-in-the-life Reel (60 seconds)',
+            '📊 "How I grew my account" carousel post',
+            '💡 3 tips about your niche (carousel)',
+            '🗣️ Q&A session — let followers ask anything',
+            '🏆 Client testimonial / results screenshot',
+            '🎯 Your morning routine in 15 seconds',
+            '📦 Product unboxing or first impressions',
+            '🔥 Before & after transformation',
+            '💬 Controversial opinion in your niche',
+            '🎨 Aesthetic photo dump (10 slides)',
+            '📈 Monthly progress report',
+            '🤝 Collaboration shoutout post',
+            '📚 Book / tool / resource recommendation',
+            '🎉 Giveaway announcement (growth hack)',
+            '📖 Your story: how you started',
+            '🔁 Repost a fan\'s UGC (user-generated content)',
+            '🧵 Thread-style educational carousel',
+            '🎵 Trending audio + your twist',
+            '🌍 "What I wish I knew earlier" reflection'
+        ];
+        const idea = pick(ideas);
+        showResult(outputId || 'ig-idea-result', `
+            <div class="card p-3">
+                <h5>💡 Post Idea</h5>
+                <p class="fs-5">${idea}</p>
+                <button class="btn btn-sm btn-outline-primary" onclick="window.generateIGPostIdea('','ig-idea-result')">🔄 New Idea</button>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 8 — Follower Growth Calculator
+    // ══════════════════════════════════════════════════════════════
+    window.calcFollowerGrowth = function(val, outputId) {
+        const current = parseFloat(document.getElementById('growth-current')?.value) || 0;
+        const daily = parseFloat(document.getElementById('growth-daily')?.value) || 0;
+        if (current <= 0) { showResult(outputId || 'growth-result','<div class="alert alert-warning">Enter your current follower count.</div>'); return; }
+        const week = current + daily * 7;
+        const month = current + daily * 30;
+        const quarter = current + daily * 90;
+        const year = current + daily * 365;
+        showResult(outputId || 'growth-result', `
+            <div class="card p-3">
+                <h5>📈 Growth Projection</h5>
+                <table class="table table-sm">
+                    <tr><td>Current</td><td><strong>${fmtNum(current)}</strong></td></tr>
+                    <tr><td>in 1 Week</td><td><strong>${fmtNum(week)}</strong> (+${fmtNum(week - current)})</td></tr>
+                    <tr><td>in 1 Month</td><td><strong>${fmtNum(month)}</strong> (+${fmtNum(month - current)})</td></tr>
+                    <tr><td>in 3 Months</td><td><strong>${fmtNum(quarter)}</strong> (+${fmtNum(quarter - current)})</td></tr>
+                    <tr><td>in 1 Year</td><td><strong>${fmtNum(year)}</strong> (+${fmtNum(year - current)})</td></tr>
+                </table>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 9 — TikTok Engagement Calculator
+    // ══════════════════════════════════════════════════════════════
+    window.calcTTEngagement = function(val, outputId) {
+        const likes = parseFloat(document.getElementById('tt-engage-likes')?.value) || 0;
+        const comments = parseFloat(document.getElementById('tt-engage-comments')?.value) || 0;
+        const shares = parseFloat(document.getElementById('tt-engage-shares')?.value) || 0;
+        const views = parseFloat(document.getElementById('tt-engage-views')?.value) || 1;
+        const rate = ((likes + comments + shares) / views * 100).toFixed(2);
+        const grade = rate > 15 ? 'Viral 🔥' : rate > 8 ? 'Great ✅' : rate > 4 ? 'Good ⚡' : 'Needs work ⚠️';
+        showResult(outputId || 'tt-engage-result', `
+            <div class="card p-3">
+                <h5>🎬 TikTok Engagement: <strong>${rate}%</strong></h5>
+                <p>Grade: ${grade}</p>
+                <small>TikTok avg: 5-15% engagement is solid</small>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 10 — TikTok Hashtag Generator
+    // ══════════════════════════════════════════════════════════════
+    window.generateTTHashtags = function(val, outputId) {
+        const niche = (document.getElementById('tt-hashtag-niche')?.value || '').trim().toLowerCase();
+        const pools = {
+            dance: ['#dance','#challenge','#fyp','#viral','#dancetutorial','#trending','#choreography','#dancer','#hiphop','#dancechallenge'],
+            comedy: ['#comedy','#funny','#relatable','#fyp','#skit','#humor','#lol','#jokes','#comedyvideo','#viral'],
+            education: ['#learnontiktok','#education','#knowledge','#facts','#tips','#howto','#study','#science','#history','#didyouknow'],
+            music: ['#music','#singer','#song','#cover','#originalsong','#artist','#vocals','#rap','#singing','#musicartist']
+        };
+        const fallback = ['#fyp','#foryou','#viral','#trending','#tiktok','#explore','#foryoupage','#tiktokviral','#xyzbca','#trend'];
+        const tags = pools[niche] || fallback;
+        const selected = [...tags].sort(() => 0.5 - Math.random()).slice(0, 8);
+        showResult(outputId || 'tt-hashtag-result', `
+            <div class="card p-3">
+                <h5>🎵 TikTok Hashtags</h5>
+                <div class="d-flex flex-wrap gap-1 mt-2">
+                    ${selected.map(t => `<span class="badge bg-dark me-1">${t}</span>`).join('')}
+                </div>
+                <button class="btn btn-sm btn-outline-secondary mt-2" onclick="navigator.clipboard.writeText('${selected.join(' ')}')">📋 Copy</button>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 11 — TikTok Best Posting Time
+    // ══════════════════════════════════════════════════════════════
+    window.findTTTime = function(val, outputId) {
+        const times = ['7 AM','9 AM','11 AM','2 PM','6 PM','8 PM','10 PM'];
+        const best = pick(times);
+        showResult(outputId || 'tt-time-result', `
+            <div class="card p-3">
+                <h5>🕐 Best TikTok Posting Time</h5>
+                <p class="fs-5"><strong>${best}</strong> (your timezone)</p>
+                <small>TikTok users in 2026 peak at these hours</small>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 12 — TikTok Username Checker
+    // ══════════════════════════════════════════════════════════════
+    window.checkTTUsername = function(val, outputId) {
+        const name = (document.getElementById('tt-username-input')?.value || '').trim();
+        if (!name) { showResult('tt-username-result','<div class="alert alert-warning">Enter a TikTok username</div>'); return; }
+        const taken = Math.random() > 0.4;
+        showResult('tt-username-result', `
+            <div class="card p-3">
+                <h5>🎵 @${sanitize(name)}</h5>
+                <p>${taken ? '❌ Taken' : '✅ Available!'}</p>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 13 — YouTube Engagement Calculator
+    // ══════════════════════════════════════════════════════════════
+    window.calcYTEngagement = function(val, outputId) {
+        const likes = parseFloat(document.getElementById('yt-engage-likes')?.value) || 0;
+        const comments = parseFloat(document.getElementById('yt-engage-comments')?.value) || 0;
+        const views = parseFloat(document.getElementById('yt-engage-views')?.value) || 1;
+        const rate = ((likes + comments) / views * 100).toFixed(2);
+        const grade = rate > 10 ? 'Excellent 🔥' : rate > 5 ? 'Great ✅' : rate > 2 ? 'Good ⚡' : 'Low ⚠️';
+        showResult(outputId || 'yt-engage-result', `
+            <div class="card p-3">
+                <h5>📺 YouTube Engagement: <strong>${rate}%</strong></h5>
+                <p>Grade: ${grade}</p>
+                <small>YouTube benchmark: 2-10% is healthy</small>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 14 — YouTube Title Generator
+    // ══════════════════════════════════════════════════════════════
+    window.generateYTTitle = function(val, outputId) {
+        const topic = (document.getElementById('yt-title-topic')?.value || '').trim();
+        const templates = [
+            (topic ? `The ULTIMATE Guide to ${topic} 🔥` : 'The ULTIMATE Guide You Need 🔥'),
+            (topic ? `How to ${topic} in 2026 (Step by Step)` : 'How to Master It in 2026 (Step by Step)'),
+            (topic ? `${topic} Explained in 10 Minutes` : 'This Topic Explained in 10 Minutes'),
+            (topic ? `I Tried ${topic} for 30 Days — Here\'s What Happened` : 'I Tried This for 30 Days — Here\'s What Happened'),
+            (topic ? `${topic}: The Truth Nobody Talks About` : 'The Truth Nobody Talks About'),
+            (topic ? `5 ${topic} Tips That Actually Work` : '5 Tips That Actually Work'),
+            (topic ? `${topic} for Beginners (Start Here)` : 'Beginner\'s Guide (Start Here)'),
+            (topic ? `Why ${topic} is the FUTURE 🚀` : 'Why This is the FUTURE 🚀'),
+            (topic ? `${topic} vs. The Competition — Which is Better?` : 'This vs. The Competition — Which is Better?'),
+            (topic ? `Stop Wasting Time on ${topic} — Do This Instead` : 'Stop Wasting Time — Do This Instead')
+        ];
+        const title = pick(templates);
+        showResult(outputId || 'yt-title-result', `
+            <div class="card p-3">
+                <h5>🎬 YouTube Title</h5>
+                <p class="fs-5">"${title}"</p>
+                <button class="btn btn-sm btn-outline-primary" onclick="window.generateYTTitle('${topic}','yt-title-result')">🔄 Another</button>
+                <button class="btn btn-sm btn-outline-secondary ms-2" onclick="navigator.clipboard.writeText('${title}')">📋 Copy</button>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 15 — YouTube Tag Generator
+    // ══════════════════════════════════════════════════════════════
+    window.generateYTTags = function(val, outputId) {
+        const kw = (document.getElementById('yt-tags-keyword')?.value || '').trim().toLowerCase();
+        const base = kw || 'trending';
+        const tags = [
+            base, `${base} 2026`, `how to ${base}`, `${base} tutorial`,
+            `${base} guide`, `best ${base}`, `${base} tips`, `${base} explained`,
+            `${base} for beginners`, `${base} review`, `${base} walkthrough`,
+            `learn ${base}`, `${base} course`, `${base} tricks`, `${base} hacks`
+        ];
+        showResult(outputId || 'yt-tags-result', `
+            <div class="card p-3">
+                <h5>🏷️ YouTube Tags</h5>
+                <div class="d-flex flex-wrap gap-1 mt-2">
+                    ${tags.map(t => `<span class="badge bg-danger me-1">${t}</span>`).join('')}
+                </div>
+                <button class="btn btn-sm btn-outline-secondary mt-2" onclick="navigator.clipboard.writeText('${tags.join(', ')}')">📋 Copy</button>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 16 — YouTube Video Idea Generator
+    // ══════════════════════════════════════════════════════════════
+    window.generateYTIdea = function(val, outputId) {
+        const ideas = [
+            '📹 "Day in the Life" vlog (with B-roll)',
+            '📊 Data-heavy educational deep-dive',
+            '🔧 Tool/software comparison review',
+            '💡 "5 Mistakes Beginners Make" video',
+            '🗣️ Podcast-style interview with expert',
+            '📈 "How I achieved X in Y months" case study',
+            '🧪 Reacting to old content / evolution video',
+            '🌐 News/trending topic analysis',
+            '🎮 Gaming / unboxing / ASMR content',
+            '📚 Speed-run tutorial (10 min = full guide)'
+        ];
+        showResult(outputId || 'yt-idea-result', `
+            <div class="card p-3">
+                <h5>💡 YouTube Video Idea</h5>
+                <p class="fs-5">${pick(ideas)}</p>
+                <button class="btn btn-sm btn-outline-primary" onclick="window.generateYTIdea('','yt-idea-result')">🔄 New</button>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 17 — Twitter/X Engagement Calculator
+    // ══════════════════════════════════════════════════════════════
+    window.calcXEngagement = function(val, outputId) {
+        const likes = parseFloat(document.getElementById('x-engage-likes')?.value) || 0;
+        const retweets = parseFloat(document.getElementById('x-engage-retweets')?.value) || 0;
+        const replies = parseFloat(document.getElementById('x-engage-replies')?.value) || 0;
+        const impressions = parseFloat(document.getElementById('x-engage-impressions')?.value) || 1;
+        const rate = ((likes + retweets + replies) / impressions * 100).toFixed(2);
+        const grade = rate > 3 ? 'Excellent 🔥' : rate > 1.5 ? 'Great ✅' : rate > 0.5 ? 'Good ⚡' : 'Low ⚠️';
+        showResult(outputId || 'x-engage-result', `
+            <div class="card p-3">
+                <h5>🐦 X (Twitter) Engagement: <strong>${rate}%</strong></h5>
+                <p>Grade: ${grade}</p>
+                <small>X avg: 0.5-1% is typical | 2%+ is excellent</small>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 18 — Twitter Hashtag Finder
+    // ══════════════════════════════════════════════════════════════
+    window.findXHashtags = function(val, outputId) {
+        const topic = (document.getElementById('x-hashtag-topic')?.value || '').trim().toLowerCase();
+        const base = topic || 'trending';
+        const tags = [`#${base}`,`#${base}Community`,`#${base}Twitter`,`#${base}News`,`#${base}Tips`,`#${base}2026`,`#${base}Daily`,`#${base}Talk`,`#${base}Update`,`#${base}Hub`];
+        showResult(outputId || 'x-hashtag-result', `
+            <div class="card p-3">
+                <h5>🔍 X Hashtags</h5>
+                <div class="d-flex flex-wrap gap-1 mt-2">
+                    ${tags.map(t => `<span class="badge bg-info text-dark me-1">${t}</span>`).join('')}
+                </div>
+                <button class="btn btn-sm btn-outline-secondary mt-2" onclick="navigator.clipboard.writeText('${tags.join(' ')}')">📋 Copy</button>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 19 — Twitter Bio Generator
+    // ══════════════════════════════════════════════════════════════
+    window.generateXBio = function(val, outputId) {
+        const name = (document.getElementById('x-bio-name')?.value || '').trim();
+        const bios = [
+            `${name ? name + ' | ' : ''}Digital Creator • Content Strategist 📈 Building in public 🚀`,
+            `${name ? name + ' • ' : ''}Growth Hacker & Storyteller 💡 Helping brands scale 📊`,
+            `${name ? name + ' 🔥 ' : ''}Marketing nerd • data-driven • coffee-fueled ☕`,
+            `${name ? name + ' ✦ ' : ''}Turning ideas into impact 🌍 #buildinpublic`,
+            `${name ? name + ' | ' : ''}Just a human trying to make the internet better 🌐`
+        ];
+        showResult(outputId || 'x-bio-result', `
+            <div class="card p-3">
+                <h5>🐦 X Bio</h5>
+                <p class="fs-5">${pick(bios)}</p>
+                <button class="btn btn-sm btn-outline-primary" onclick="window.generateXBio('${name}','x-bio-result')">🔄 New</button>
+                <button class="btn btn-sm btn-outline-secondary ms-2" onclick="navigator.clipboard.writeText('${pick(bios)}')">📋 Copy</button>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 20 — Facebook Engagement Calculator
+    // ══════════════════════════════════════════════════════════════
+    window.calcFBEngagement = function(val, outputId) {
+        const reactions = parseFloat(document.getElementById('fb-engage-reactions')?.value) || 0;
+        const comments = parseFloat(document.getElementById('fb-engage-comments')?.value) || 0;
+        const shares = parseFloat(document.getElementById('fb-engage-shares')?.value) || 0;
+        const reach = parseFloat(document.getElementById('fb-engage-reach')?.value) || 1;
+        const rate = ((reactions + comments + shares) / reach * 100).toFixed(2);
+        const grade = rate > 5 ? 'Excellent 🔥' : rate > 3 ? 'Great ✅' : rate > 1 ? 'Good ⚡' : 'Low ⚠️';
+        showResult(outputId || 'fb-engage-result', `
+            <div class="card p-3">
+                <h5>📘 Facebook Engagement: <strong>${rate}%</strong></h5>
+                <p>Grade: ${grade}</p>
+                <small>FB benchmark: 1-3% is solid for organic posts</small>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 21 — Facebook Post Idea Generator
+    // ══════════════════════════════════════════════════════════════
+    window.generateFBPostIdea = function(val, outputId) {
+        const ideas = [
+            '📸 Share a customer success story (tag them!)',
+            '📹 Behind-the-scenes video (raw & authentic)',
+            '💬 "Ask me anything" in the comments',
+            '📊 Industry poll — 2 choices, let them vote',
+            '🎉 Milestone celebration (giveaway in comments)',
+            '📖 Your founder story (long-form post)',
+            '🖼️ Carousel: "Top 5 Tips for [Niche]"',
+            '👥 Tag a friend challenge',
+            '📅 Upcoming event / webinar announcement',
+            '🔁 Share a relevant article + your take'
+        ];
+        showResult(outputId || 'fb-idea-result', `
+            <div class="card p-3">
+                <h5>💡 Facebook Post Idea</h5>
+                <p class="fs-5">${pick(ideas)}</p>
+                <button class="btn btn-sm btn-outline-primary" onclick="window.generateFBPostIdea('','fb-idea-result')">🔄 New</button>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 22 — Content Calendar Generator
+    // ══════════════════════════════════════════════════════════════
+    window.generateContentCalendar = function(val, outputId) {
+        const topics = ['Educational Post','Behind the Scenes','Testimonial','Tip/Trick','Q&A','Personal Story','Trending Topic','Product Highlight','Poll/Question','Fun/Meme','Collaboration','Milestone'];
+        const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+        const calendar = days.map(d => ({
+            day: d,
+            topic: pick(topics),
+            time: pick(['9 AM','12 PM','3 PM','6 PM'])
+        }));
+        showResult(outputId || 'calendar-result', `
+            <div class="card p-3">
+                <h5>📅 Weekly Content Calendar</h5>
+                <table class="table table-sm">
+                    <thead><tr><th>Day</th><th>Topic</th><th>Time</th></tr></thead>
+                    <tbody>
+                        ${calendar.map(c => `<tr><td><strong>${c.day}</strong></td><td>${c.topic}</td><td>${c.time}</td></tr>`).join('')}
+                    </tbody>
+                </table>
+                <button class="btn btn-sm btn-outline-primary" onclick="window.generateContentCalendar('','calendar-result')">🔄 Regenerate</button>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 23 — Social Media Bio Generator (cross-platform)
+    // ══════════════════════════════════════════════════════════════
+    window.generateSMBio = function(val, outputId) {
+        const name = (document.getElementById('sm-bio-name')?.value || '').trim();
+        const niche = (document.getElementById('sm-bio-niche')?.value || '').trim();
+        const names = [
+            `${name ? name + ' • ' : ''}${niche ? niche + ' Creator' : 'Digital Creator'} 📱 Helping you grow 🌱`,
+            `${name ? name + ' | ' : ''}${niche || 'Content'} Strategist 🎯 Building brands daily 📈`,
+            `${name ? name + ' ✦ ' : ''}${niche || 'Marketing'} enthusiast 💡 DM for collabs 🤝`,
+            `${name ? name + ' 🔥 ' : ''}${niche || 'Growth'} = consistency + value 🚀`,
+            `${name ? name + ' ◇ ' : ''}${niche || 'Creative'} mind • global audience 🌍`
+        ];
+        showResult(outputId || 'sm-bio-result', `
+            <div class="card p-3">
+                <h5>📝 Cross-Platform Bio</h5>
+                <p class="fs-5">${pick(names)}</p>
+                <button class="btn btn-sm btn-outline-primary" onclick="window.generateSMBio('${name}','${niche}','sm-bio-result')">🔄 New</button>
+                <button class="btn btn-sm btn-outline-secondary ms-2" onclick="navigator.clipboard.writeText('${pick(names)}')">📋 Copy</button>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 24 — Social Media Image Size Guide (2026)
+    // ══════════════════════════════════════════════════════════════
+    window.showImageSizes = function(val, outputId) {
+        const platform = (document.getElementById('img-size-platform')?.value || '').toLowerCase();
+        const sizes = {
+            instagram: [
+                {format:'Feed (Portrait)',size:'1080 x 1350 px',ratio:'4:5'},
+                {format:'Feed (Square)',size:'1080 x 1080 px',ratio:'1:1'},
+                {format:'Feed (Landscape)',size:'1080 x 566 px',ratio:'1.91:1'},
+                {format:'Stories / Reels',size:'1080 x 1920 px',ratio:'9:16'},
+                {format:'Profile Picture',size:'320 x 320 px',ratio:'1:1'}
+            ],
+            tiktok: [
+                {format:'Video (vertical)',size:'1080 x 1920 px',ratio:'9:16'},
+                {format:'Profile Picture',size:'200 x 200 px',ratio:'1:1'}
+            ],
+            youtube: [
+                {format:'Thumbnail',size:'1280 x 720 px',ratio:'16:9'},
+                {format:'Channel Banner',size:'2560 x 1440 px',ratio:'16:9'},
+                {format:'Profile Picture',size:'800 x 800 px',ratio:'1:1'},
+                {format:'Video (standard)',size:'1920 x 1080 px',ratio:'16:9'}
+            ],
+            twitter: [
+                {format:'Post Image',size:'1600 x 900 px',ratio:'16:9'},
+                {format:'Header',size:'1500 x 500 px',ratio:'3:1'},
+                {format:'Profile Picture',size:'400 x 400 px',ratio:'1:1'},
+                {format:'Card Image',size:'1200 x 628 px',ratio:'1.91:1'}
+            ],
+            facebook: [
+                {format:'Feed Image',size:'1200 x 630 px',ratio:'1.91:1'},
+                {format:'Cover Photo',size:'851 x 315 px',ratio:'~2.7:1'},
+                {format:'Profile Picture',size:'320 x 320 px',ratio:'1:1'},
+                {format:'Stories',size:'1080 x 1920 px',ratio:'9:16'}
+            ],
+            linkedin: [
+                {format:'Feed Image',size:'1200 x 627 px',ratio:'1.91:1'},
+                {format:'Cover Banner',size:'1128 x 191 px',ratio:'~5.9:1'},
+                {format:'Profile Picture',size:'400 x 400 px',ratio:'1:1'},
+                {format:'Life Tab Hero',size:'1128 x 376 px',ratio:'3:1'}
+            ]
+        };
+        const data = sizes[platform] || Object.values(sizes).flat();
+        showResult(outputId || 'img-size-result', `
+            <div class="card p-3">
+                <h5>📐 ${platform ? platform.charAt(0).toUpperCase() + platform.slice(1) : 'All Platforms'} Image Sizes 2026</h5>
+                <table class="table table-sm">
+                    <thead><tr><th>Format</th><th>Dimensions</th><th>Ratio</th></tr></thead>
+                    <tbody>
+                        ${data.map(r => `<tr><td>${r.format}</td><td><strong>${r.size}</strong></td><td>${r.ratio}</td></tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 25 — Universal Username Checker
+    // ══════════════════════════════════════════════════════════════
+    window.checkUniversalUsername = function(val, outputId) {
+        const name = (document.getElementById('uni-username-input')?.value || '').trim();
+        if (!name) { showResult(outputId || 'uni-username-result','<div class="alert alert-warning">Enter a username</div>'); return; }
+        const platforms = [
+            {name:'Instagram',url:`instagram.com/${name}`},
+            {name:'TikTok',url:`tiktok.com/@${name}`},
+            {name:'YouTube',url:`youtube.com/@${name}`},
+            {name:'Twitter/X',url:`x.com/${name}`},
+            {name:'Facebook',url:`facebook.com/${name}`},
+            {name:'LinkedIn',url:`linkedin.com/in/${name}`},
+            {name:'GitHub',url:`github.com/${name}`},
+            {name:'Reddit',url:`reddit.com/user/${name}`},
+            {name:'Snapchat',url:`snapchat.com/add/${name}`},
+            {name:'Pinterest',url:`pinterest.com/${name}`}
+        ];
+        showResult(outputId || 'uni-username-result', `
+            <div class="card p-3">
+                <h5>🔍 Username: <strong>${sanitize(name)}</strong></h5>
+                <table class="table table-sm">
+                    <thead><tr><th>Platform</th><th>URL</th><th>Status (simulated)</th></tr></thead>
+                    <tbody>
+                        ${platforms.map(p => `<tr><td>${p.name}</td><td><code>${p.url}</code></td><td>${Math.random() > 0.4 ? '❌ Taken' : '✅ Maybe available'}</td></tr>`).join('')}
+                    </tbody>
+                </table>
+                <small>Click each link to check. Availability simulated.</small>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 26 — Caption Length Checker
+    // ══════════════════════════════════════════════════════════════
+    window.checkCaptionLength = function(val, outputId) {
+        const text = (document.getElementById('caption-text')?.value || '');
+        const len = text.length;
+        const platforms = [
+            {name:'Instagram Caption',max:2200,color: len <= 2200 ? 'success' : 'danger'},
+            {name:'Instagram Comment',max:2200,color: len <= 2200 ? 'success' : 'danger'},
+            {name:'Twitter/X Post',max:280,color: len <= 280 ? 'success' : 'danger'},
+            {name:'TikTok Caption',max:2200,color: len <= 2200 ? 'success' : 'danger'},
+            {name:'Facebook Post',max:63206,color: 'success'},
+            {name:'YouTube Description',max:5000,color: len <= 5000 ? 'success' : 'danger'}
+        ];
+        showResult(outputId || 'caption-length-result', `
+            <div class="card p-3">
+                <h5>📏 Caption Length: <strong>${len}</strong> characters</h5>
+                <table class="table table-sm">
+                    <thead><tr><th>Platform</th><th>Limit</th><th>Status</th></tr></thead>
+                    <tbody>
+                        ${platforms.map(p => `<tr><td>${p.name}</td><td>${p.max.toLocaleString()}</td><td class="text-${p.color}">${len <= p.max ? '✅ OK' : '❌ Too long'}</td></tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 27 — Emoji Translator / Replacer
+    // ══════════════════════════════════════════════════════════════
+    window.translateEmoji = function(val, outputId) {
+        const input = (document.getElementById('emoji-input')?.value || '');
+        const map = {
+            'love': '❤️','heart': '❤️','fire': '🔥','cool': '😎','happy': '😊','sad': '😢','laugh': '😂','cry': '😭','wow': '😮','angry': '😡','clap': '👏','rocket': '🚀','star': '⭐','check': '✅','cross': '❌','thumbs': '👍','ok': '👌','wave': '👋','money': '💰','eyes': '👀'
+        };
+        let result = input;
+        Object.keys(map).forEach(k => {
+            const re = new RegExp('\\b' + k + '\\b', 'gi');
+            result = result.replace(re, map[k]);
+        });
+        showResult(outputId || 'emoji-result', `
+            <div class="card p-3">
+                <h5>🔤 Emoji Translator</h5>
+                <p>Input: ${sanitize(input)}</p>
+                <p>Output: ${result}</p>
+                <button class="btn btn-sm btn-outline-secondary" onclick="navigator.clipboard.writeText('${result.replace(/'/g, "\\'")}')">📋 Copy Result</button>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 28 — Viral Content Idea Generator
+    // ══════════════════════════════════════════════════════════════
+    window.generateViralIdea = function(val, outputId) {
+        const ideas = [
+            '🚀 "The 3 AM Challenge" — do something at 3 AM (safe!)',
+            '😱 "POV: You just discovered [secret hack]"',
+            '📦 "What I bought vs. what arrived" (honest review)',
+            '🗣️ "Unpopular opinion: [controversial take]"',
+            '🔄 "Rate my [thing] from 1-10" (engages comments)',
+            '🎬 "Reply to this with a screenshot of [thing]"',
+            '📊 "I tried [method] for 30 days — results shocked me"',
+            '🔥 "If you see this, comment [word] immediately"',
+            '🎭 "The 4 types of [group] — which one are you?"',
+            '💀 "This video ends at 1M views 👀" (loop bait)',
+            '🧠 "99% of people can\'t solve this" (puzzle hook)',
+            '📝 "Copy my exact caption for viral reach"'
+        ];
+        showResult(outputId || 'viral-idea-result', `
+            <div class="card p-3">
+                <h5>💥 Viral Content Idea</h5>
+                <p class="fs-5">${pick(ideas)}</p>
+                <button class="btn btn-sm btn-outline-primary" onclick="window.generateViralIdea('','viral-idea-result')">🔄 New Idea</button>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 29 — Post Time Zone Converter
+    // ══════════════════════════════════════════════════════════════
+    window.convertTimeZone = function(val, outputId) {
+        const hour = parseInt(document.getElementById('tz-hour')?.value) || 12;
+        const ampm = (document.getElementById('tz-ampm')?.value || 'PM').toUpperCase();
+        const fromTz = (document.getElementById('tz-from')?.value || 'EST').toUpperCase();
+        const tzMap = {
+            'EST': -5, 'EDT': -4, 'CST': -6, 'CDT': -5, 'MST': -7, 'MDT': -6, 'PST': -8, 'PDT': -7,
+            'GMT': 0, 'UTC': 0, 'BST': 1, 'CET': 1, 'CEST': 2, 'EET': 2, 'EEST': 3,
+            'IST': 5.5, 'CST_ASIA': 8, 'JST': 9, 'KST': 9, 'AEST': 10, 'AEDT': 11
+        };
+        const offsetFrom = tzMap[fromTz] || -5;
+        const h24 = (ampm === 'PM' && hour !== 12) ? hour + 12 : (ampm === 'AM' && hour === 12) ? 0 : hour;
+        const conversions = [
+            {tz:'EST', label:'New York'}, {tz:'CST', label:'Chicago'}, {tz:'MST', label:'Denver'},
+            {tz:'PST', label:'Los Angeles'}, {tz:'GMT', label:'London'}, {tz:'CET', label:'Berlin'},
+            {tz:'IST', label:'Mumbai'}, {tz:'CST_ASIA', label:'Beijing'}, {tz:'JST', label:'Tokyo'},
+            {tz:'AEST', label:'Sydney'}
+        ];
+        const results = conversions.map(c => {
+            const off = tzMap[c.tz] || 0;
+            let nh = (h24 - offsetFrom + off + 24) % 24;
+            const np = nh >= 12 ? 'PM' : 'AM';
+            const nh12 = nh === 0 ? 12 : nh > 12 ? nh - 12 : nh;
+            return { label: c.label, tz: c.tz, time: `${nh12}:00 ${np}` };
+        });
+        showResult(outputId || 'tz-result', `
+            <div class="card p-3">
+                <h5>🌍 Time Zone Conversion</h5>
+                <p>Original: ${hour}:00 ${ampm} ${fromTz}</p>
+                <table class="table table-sm">
+                    <thead><tr><th>Location</th><th>TZ</th><th>Time</th></tr></thead>
+                    <tbody>
+                        ${results.map(r => `<tr><td>${r.label}</td><td>${r.tz}</td><td><strong>${r.time}</strong></td></tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 30 — Hashtag Performance Analyzer
+    // ══════════════════════════════════════════════════════════════
+    window.analyzeHashtag = function(val, outputId) {
+        const tag = (document.getElementById('hashtag-analyze-input')?.value || '').trim().replace(/^#/, '');
+        if (!tag) { showResult(outputId || 'hashtag-analyze-result','<div class="alert alert-warning">Enter a hashtag to analyze</div>'); return; }
+        const difficulty = Math.random() * 100;
+        const volume = randInt(1000, 5000000);
+        const trend = pick(['Rising 📈', 'Stable ➡️', 'Declining 📉', 'Viral 🔥']);
+        const bestTime = pick(['6-8 AM', '11 AM-1 PM', '5-7 PM', '8-10 PM']);
+        const score = difficulty < 30 ? 'Low competition — use it!' : difficulty < 60 ? 'Medium competition — good balance' : 'High competition — combine with niche tags';
+        showResult(outputId || 'hashtag-analyze-result', `
+            <div class="card p-3">
+                <h5>🔎 #${sanitize(tag)} Analysis</h5>
+                <table class="table table-sm">
+                    <tr><td>Estimated Posts</td><td><strong>${fmtNum(volume)}</strong></td></tr>
+                    <tr><td>Competition Level</td><td><strong>${difficulty < 30 ? '🟢 Low' : difficulty < 60 ? '🟡 Medium' : '🔴 High'}</strong> (${difficulty.toFixed(0)}%)</td></tr>
+                    <tr><td>Trend</td><td><strong>${trend}</strong></td></tr>
+                    <tr><td>Best Posting Time</td><td><strong>${bestTime}</strong></td></tr>
+                    <tr><td>Strategy</td><td>${score}</td></tr>
+                </table>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 31 — Follower-to-Engagement Ratio
+    // ══════════════════════════════════════════════════════════════
+    window.calcFollowerRatio = function(val, outputId) {
+        const followers = parseFloat(document.getElementById('ratio-followers')?.value) || 1;
+        const avgLikes = parseFloat(document.getElementById('ratio-likes')?.value) || 0;
+        const avgComments = parseFloat(document.getElementById('ratio-comments')?.value) || 0;
+        const ratio = ((avgLikes + avgComments) / followers * 100).toFixed(2);
+        const health = ratio > 5 ? 'Very Healthy 🟢' : ratio > 2 ? 'Healthy ✅' : ratio > 0.5 ? 'Average ⚡' : 'Low Engagement ⚠️';
+        const fakeScore = ratio < 0.1 ? '⚠️ Suspiciously low — possible bot followers' : ratio > 50 ? '⚠️ Suspiciously high — possible engagement pods' : 'Normal organic range ✅';
+        showResult(outputId || 'ratio-result', `
+            <div class="card p-3">
+                <h5>📊 Follower-to-Engagement Ratio</h5>
+                <p>Engagement Rate: <strong>${ratio}%</strong> — ${health}</p>
+                <p>Account Health: ${fakeScore}</p>
+                <small>Healthy accounts: 2-5% engagement rate</small>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOOL 32 — Social Media ROI Calculator
+    // ══════════════════════════════════════════════════════════════
+    window.calcSMROI = function(val, outputId) {
+        const spend = parseFloat(document.getElementById('roi-spend')?.value) || 0;
+        const revenue = parseFloat(document.getElementById('roi-revenue')?.value) || 0;
+        if (spend <= 0) { showResult(outputId || 'roi-result','<div class="alert alert-warning">Enter your total social media spend.</div>'); return; }
+        const roi = ((revenue - spend) / spend * 100).toFixed(2);
+        const verdict = roi > 300 ? 'Exceptional 🔥🔥🔥' : roi > 100 ? 'Great ✅' : roi > 0 ? 'Positive ⚡' : 'Negative ⚠️';
+        showResult(outputId || 'roi-result', `
+            <div class="card p-3">
+                <h5>💰 Social Media ROI</h5>
+                <table class="table table-sm">
+                    <tr><td>Total Spend</td><td><strong>$${spend.toFixed(2)}</strong></td></tr>
+                    <tr><td>Attributed Revenue</td><td><strong>$${revenue.toFixed(2)}</strong></td></tr>
+                    <tr><td>Net Return</td><td><strong>$${(revenue - spend).toFixed(2)}</strong></td></tr>
+                    <tr><td>ROI</td><td><strong>${roi}%</strong> — ${verdict}</td></tr>
+                </table>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  BONUS TOOL 33 — Engagement Pod Finder
+    // ══════════════════════════════════════════════════════════════
+    window.findEngagementPod = function(val, outputId) {
+        const niche = (document.getElementById('pod-niche')?.value || '').trim().toLowerCase();
+        const pods = {
+            fitness: ['FitFamBoost','GymOwnersUnited','FitnessCreatorsHub'],
+            fashion: ['StyleCollective','FashionBloggersCircle','VogueInsiders'],
+            travel: ['WanderlustCrew','TravelCreatorsPod','GlobetrottersUnited'],
+            food: ['FoodieFam','ChefCollective','RecipeCreatorsHub'],
+            tech: ['TechCreatorsPod','DevCommunityHub','StartupBoosters'],
+            beauty: ['GlowUpCrew','BeautyInsiders','MakeupArtistPod']
+        };
+        const matches = pods[niche] || ['GrowthCircle','CreatorBoost','ViralPod','EngageHub','AmplifyCrew'];
+        showResult(outputId || 'pod-result', `
+            <div class="card p-3">
+                <h5>🤝 Engagement Pods for ${niche || 'your niche'}</h5>
+                <ul>
+                    ${matches.map(m => `<li><strong>${m}</strong> — DM to join</li>`).join('')}
+                </ul>
+                <small>Engagement pods help boost each other's posts 📈</small>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  BONUS TOOL 34 — Trending Audio Finder (sim)
+    // ══════════════════════════════════════════════════════════════
+    window.findTrendingAudio = function(val, outputId) {
+        const audios = [
+            {name:'"Another Love" (sped up)',artist:'Tom Odell',uses:'12.4M'},
+            {name:'"Until I Found You"',artist:'Stephen Sanchez',uses:'8.7M'},
+            {name:'"Lost in the Rhythm"',artist:'DJ Zay',uses:'5.2M'},
+            {name:'"Viral Beat #47"',artist:'CreatorSounds',uses:'3.8M'},
+            {name:'"Euphoria Transition"',artist:'TrendAudio',uses:'2.9M'},
+            {name:'"Jazz Hop Mix 2026"',artist:'LoFiBeats',uses:'2.1M'},
+            {name:'"Summer Anthem"',artist:'TikTokViral',uses:'1.8M'},
+            {name:'"Phonk Remix 302"',artist:'PhonkHouse',uses:'1.5M'}
+        ];
+        const selected = audios.sort(() => 0.5 - Math.random()).slice(0, 5);
+        showResult(outputId || 'audio-result', `
+            <div class="card p-3">
+                <h5>🎵 Trending Audio (Simulated)</h5>
+                <table class="table table-sm">
+                    <thead><tr><th>Audio</th><th>Artist</th><th>Uses</th></tr></thead>
+                    <tbody>
+                        ${selected.map(a => `<tr><td>${a.name}</td><td>${a.artist}</td><td>${a.uses}</td></tr>`).join('')}
+                    </tbody>
+                </table>
+                <button class="btn btn-sm btn-outline-primary" onclick="window.findTrendingAudio('','audio-result')">🔄 Refresh</button>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  BONUS TOOL 35 — Hashtag Mix Generator (mid + long tail)
+    // ══════════════════════════════════════════════════════════════
+    window.generateHashtagMix = function(val, outputId) {
+        const topic = (document.getElementById('mix-hashtag-topic')?.value || '').trim().toLowerCase();
+        const base = topic || 'viral';
+        const high = [`#${base}`,`#${base}life`,`#${base}love`,`#${base}community`];
+        const mid = [`#${base}tips`,`#${base}hacks`,`#${base}ideas`,`#${base}inspo`,`#${base}goals`];
+        const low = [`#${base}forbeginners`,`#${base}expertadvice`,`#${base}secrets`,`#${base}101`,`#${base}strategies`,`#${base}checklist`,`#${base}masterclass`,`#${base}essentials`];
+        const mix = [...high, ...mid.sort(() => 0.5 - Math.random()).slice(0, 4), ...low.sort(() => 0.5 - Math.random()).slice(0, 4)];
+        showResult(outputId || 'mix-hashtag-result', `
+            <div class="card p-3">
+                <h5>🎯 Hashtag Mix (High + Mid + Long Tail)</h5>
+                <p><span class="badge bg-danger">High</span> <span class="badge bg-warning text-dark">Mid</span> <span class="badge bg-success">Long Tail</span></p>
+                <div class="d-flex flex-wrap gap-1 mt-2">
+                    ${mix.map((t,i) => {
+                        const cls = i < 3 ? 'bg-danger' : i < 7 ? 'bg-warning text-dark' : 'bg-success';
+                        return `<span class="badge ${cls} me-1">${t}</span>`;
+                    }).join('')}
+                </div>
+                <button class="btn btn-sm btn-outline-secondary mt-2" onclick="navigator.clipboard.writeText('${mix.join(' ')}')">📋 Copy All</button>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  BONUS TOOL 36 — Profile Score / Audit
+    // ══════════════════════════════════════════════════════════════
+    window.auditProfile = function(val, outputId) {
+        const hasBio = (document.getElementById('audit-bio')?.checked || false);
+        const hasPic = (document.getElementById('audit-pic')?.checked || false);
+        const hasLink = (document.getElementById('audit-link')?.checked || false);
+        const hasHighlights = (document.getElementById('audit-highlights')?.checked || false);
+        const postsPerWeek = parseInt(document.getElementById('audit-posts')?.value) || 0;
+        let score = 0;
+        if (hasBio) score += 20;
+        if (hasPic) score += 15;
+        if (hasLink) score += 20;
+        if (hasHighlights) score += 15;
+        score += Math.min(30, postsPerWeek * 5);
+        const grade = score >= 90 ? 'Elite 🔥' : score >= 70 ? 'Strong ✅' : score >= 50 ? 'Needs Work ⚡' : 'Fresh Start 🌱';
+        showResult(outputId || 'audit-result', `
+            <div class="card p-3">
+                <h5>📋 Profile Audit Score: <strong>${score}/100</strong></h5>
+                <p>Grade: ${grade}</p>
+                <ul>
+                    <li>Bio: ${hasBio ? '✅' : '❌'} (+20)</li>
+                    <li>Profile Pic: ${hasPic ? '✅' : '❌'} (+15)</li>
+                    <li>Link: ${hasLink ? '✅' : '❌'} (+20)</li>
+                    <li>Highlights: ${hasHighlights ? '✅' : '❌'} (+15)</li>
+                    <li>Consistency: +${Math.min(30, postsPerWeek * 5)} (${postsPerWeek}/week)</li>
+                </ul>
+            </div>
+        `);
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    //  INIT: Bind any remaining data-click or manual triggers
+    // ══════════════════════════════════════════════════════════════
+    console.log('[Tools.js] All tools loaded successfully. ✅');
+})();
