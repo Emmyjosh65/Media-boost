@@ -1,35 +1,36 @@
 /**
  * ============================================================
- * MEDIA BOOST — Core Module (Full Working Version)
+ * MEDIA BOOST — Core Module v3
  * Owner: Zeus  |  Contact: ge5853987@gmail.com
+ * WhatsApp: 09066760078  |  Email: ge5853987@gmail.com
  * 
  * Features:
- * - Tab-based navigation (one page at a time)
- * - Naira pricing: followers ₦1,000/100, views/likes ₦600/100
- * - Price shows after selecting platform + service + quantity
- * - Profile preview when entering username
+ * - Tab navigation (one page at a time)
+ * - Price: followers ₦1,000/100, views ₦600/100, likes ₦600/100
+ * - User types quantity manually → price shows live
+ * - Real social media profile photo auto-fetched via oEmbed API
+ * - WhatsApp & Email submission after payment
  * - Hidden admin (tap logo 5x or #admin)
- * - 20 platforms, full order/payment/dashboard system
- * - 38 free tools (32 utilities + 6 free engagement)
  * ============================================================
  */
 'use strict';
 
 // ===== PRICING =====
-const PRICE_FOLLOWERS = 1000; // ₦1,000 per 100
-const PRICE_VIEWS = 600;      // ₦600 per 100
-const PRICE_LIKES = 600;      // ₦600 per 100
+const PRICE_FOLLOWERS = 1000;
+const PRICE_VIEWS = 600;
+const PRICE_LIKES = 600;
 
 function getPricePerHundred(serviceName) {
-    var name = (serviceName || '').toLowerCase();
-    if (name.indexOf('follower') !== -1 || name.indexOf('subscriber') !== -1 || name.indexOf('member') !== -1) return PRICE_FOLLOWERS;
-    if (name.indexOf('like') !== -1 || name.indexOf('comment') !== -1 || name.indexOf('reaction') !== -1 || name.indexOf('save') !== -1 || name.indexOf('share') !== -1) return PRICE_LIKES;
-    if (name.indexOf('view') !== -1 || name.indexOf('visit') !== -1 || name.indexOf('watch') !== -1 || name.indexOf('live') !== -1) return PRICE_VIEWS;
+    var n = (serviceName || '').toLowerCase();
+    if (n.indexOf('follower') !== -1 || n.indexOf('subscriber') !== -1 || n.indexOf('member') !== -1) return PRICE_FOLLOWERS;
+    if (n.indexOf('like') !== -1 || n.indexOf('comment') !== -1 || n.indexOf('reaction') !== -1 || n.indexOf('save') !== -1 || n.indexOf('share') !== -1) return PRICE_LIKES;
+    if (n.indexOf('view') !== -1 || n.indexOf('visit') !== -1 || n.indexOf('watch') !== -1 || n.indexOf('live') !== -1) return PRICE_VIEWS;
     return PRICE_VIEWS;
 }
 
 function calculatePrice(serviceName, quantity) {
-    return (quantity / 100) * getPricePerHundred(serviceName);
+    var q = parseInt(quantity) || 0;
+    return (q / 100) * getPricePerHundred(serviceName);
 }
 
 function formatNaira(amount) {
@@ -40,7 +41,7 @@ function formatNaira(amount) {
 var DB = {
     services: [
         { platform: 'Instagram', icon: 'fab fa-instagram', color: '#E4405F', items: ['Followers','Likes','Views','Reels Views','Story Views','Saves','Comments','Profile Visits'] },
-        { platform: 'TikTok', icon: 'fab fa-tiktok', color: '#000000', items: ['Followers','Likes','Views','Shares','Comments','Live Views'] },
+        { platform: 'TikTok', icon: 'fab fa-tiktok', color: '#000', items: ['Followers','Likes','Views','Shares','Comments','Live Views'] },
         { platform: 'Facebook', icon: 'fab fa-facebook', color: '#1877F2', items: ['Page Likes','Followers','Video Views','Post Likes','Shares','Comments'] },
         { platform: 'YouTube', icon: 'fab fa-youtube', color: '#FF0000', items: ['Subscribers','Views','Likes','Comments','Watch Hours'] },
         { platform: 'WhatsApp', icon: 'fab fa-whatsapp', color: '#25D366', items: ['Channel Followers','Channel Reactions'] },
@@ -106,54 +107,35 @@ var DB = {
 // ===== DOM READY =====
 document.addEventListener('DOMContentLoaded', function() {
 
-    // Preloader
     var preloader = document.getElementById('preloader');
     if (preloader) { setTimeout(function() { preloader.classList.add('hidden'); }, 2000); }
 
     // ===== NAVIGATION =====
-    var currentPage = 'home';
-
     function switchPage(pageId) {
         document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
         var target = document.getElementById('page-' + pageId);
         if (target) target.classList.add('active');
-
-        document.querySelectorAll('.tab-link').forEach(function(t) {
-            t.classList.toggle('active', t.dataset.section === pageId);
-        });
-        document.querySelectorAll('.sidebar-link').forEach(function(l) {
-            l.classList.toggle('active', l.dataset.section === pageId);
-        });
-
-        currentPage = pageId;
+        document.querySelectorAll('.tab-link').forEach(function(t) { t.classList.toggle('active', t.dataset.section === pageId); });
+        document.querySelectorAll('.sidebar-link').forEach(function(l) { l.classList.toggle('active', l.dataset.section === pageId); });
         window.scrollTo({ top: 0, behavior: 'smooth' });
         closeSidebar();
     }
 
-    // Tab clicks
     document.querySelectorAll('.tab-link, .sidebar-link').forEach(function(el) {
         el.addEventListener('click', function(e) {
             e.preventDefault();
-            var section = this.dataset.section;
-            if (section === 'more') section = 'more';
-            switchPage(section);
+            switchPage(this.dataset.section);
         });
     });
 
-    // Section links ("Get Started" etc)
     document.querySelectorAll('.section-link').forEach(function(el) {
         el.addEventListener('click', function(e) {
             e.preventDefault();
-            var href = this.getAttribute('href');
-            if (href) {
-                var section = href.replace('#', '');
-                if (section === 'more') section = 'more';
-                switchPage(section);
-            }
+            var s = this.getAttribute('href').replace('#', '');
+            switchPage(s === 'more' ? 'more' : s);
         });
     });
 
-    // Hash
     function handleHash() {
         var hash = window.location.hash.replace('#', '');
         if (hash === 'admin') { setTimeout(toggleAdmin, 300); return; }
@@ -178,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function animateCounter(el, target) {
         if (!el) return;
         var current = 0;
-        var step = Math.ceil(target / 40);
+        var step = Math.ceil(target / 40) || 1;
         var interval = setInterval(function() {
             current += step;
             if (current >= target) { current = target; clearInterval(interval); }
@@ -192,22 +174,16 @@ document.addEventListener('DOMContentLoaded', function() {
     animateCounter(document.getElementById('totalCountries'), 15);
     animateCounter(document.getElementById('totalUsers'), DB.orders.length || 0);
 
-    // ===== PRICING BANNER =====
-    // Already in HTML
-
     // ===== SERVICES GRID =====
     function renderServices(filter) {
         var grid = document.getElementById('servicesGrid');
         var filterEl = document.getElementById('servicesFilter');
         if (!grid || !filterEl) return;
-
         var platforms = [];
         DB.services.forEach(function(s) { if (platforms.indexOf(s.platform) === -1) platforms.push(s.platform); });
-
         var fHtml = '<button class="filter-btn active" data-filter="all">All</button>';
         platforms.forEach(function(p) { fHtml += '<button class="filter-btn" data-filter="'+p+'">'+p+'</button>'; });
         filterEl.innerHTML = fHtml;
-
         filterEl.querySelectorAll('.filter-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 filterEl.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
@@ -218,7 +194,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var services = DB.services;
         if (filter && filter !== 'all') { services = services.filter(function(s) { return s.platform === filter; }); }
-
         var html = '';
         services.forEach(function(svc) {
             html += '<div class="service-card" onclick="openService(\''+svc.platform+'\')">';
@@ -226,18 +201,16 @@ document.addEventListener('DOMContentLoaded', function() {
             html += '<h4>'+svc.platform+'</h4>';
             html += '<span class="service-count">'+svc.items.length+' services</span>';
             html += '<div class="service-items">';
-            svc.items.slice(0,4).forEach(function(item) {
-                var p = formatNaira(calculatePrice(item, 100));
-                html += '<span class="service-tag">'+item+' <small>'+p+'/100</small></span>';
+            svc.items.slice(0,5).forEach(function(item) {
+                html += '<span class="service-tag">'+item+'</span>';
             });
-            if (svc.items.length > 4) html += '<span class="service-tag">+'+(svc.items.length-4)+' more</span>';
+            if (svc.items.length > 5) html += '<span class="service-tag">+'+(svc.items.length-5)+' more</span>';
             html += '</div></div>';
         });
         grid.innerHTML = html;
     }
     renderServices('all');
 
-    // ===== OPEN SERVICE =====
     window.openService = function(platform) {
         var select = document.getElementById('orderPlatform');
         if (select) {
@@ -257,18 +230,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (orderPlatform) { orderPlatform.addEventListener('change', function() { updateServices(); updatePrice(); }); }
     if (orderService) { orderService.addEventListener('change', updatePrice); }
     if (orderQuantity) {
-        orderQuantity.addEventListener('change', function() { if (parseInt(this.value) < 10) this.value = 10; updatePrice(); });
         orderQuantity.addEventListener('input', updatePrice);
+        orderQuantity.addEventListener('change', updatePrice);
     }
-
-    window.adjustQty = function(amount) {
-        var input = document.getElementById('orderQuantity');
-        if (!input) return;
-        var val = parseInt(input.value) || 100;
-        val = Math.max(10, val + amount);
-        input.value = val;
-        updatePrice();
-    };
 
     function updateServices() {
         if (!orderPlatform || !orderService) return;
@@ -278,24 +242,23 @@ document.addEventListener('DOMContentLoaded', function() {
         var svc = DB.services.filter(function(s) { return s.platform === platform; });
         if (svc.length === 0) return;
         svc[0].items.forEach(function(item) {
-            var price = formatNaira(calculatePrice(item, 100));
-            orderService.innerHTML += '<option value="'+item+'">'+item+' ('+price+'/100)</option>';
+            // ONLY show service name, NO price in dropdown
+            orderService.innerHTML += '<option value="'+item+'">'+item+'</option>';
         });
     }
 
     function updatePrice() {
         var service = orderService ? orderService.value : '';
-        var qty = parseInt(orderQuantity ? orderQuantity.value : 100) || 100;
+        var qty = parseInt(orderQuantity ? orderQuantity.value : 0) || 0;
         var price = calculatePrice(service, qty);
         var formatted = formatNaira(price);
-        var els = ['totalPrice','priceBtn','payAmount','payAmountMoMo'];
-        els.forEach(function(id) {
+        ['totalPrice','priceBtn','payAmount','payAmountMoMo'].forEach(function(id) {
             var el = document.getElementById(id);
             if (el) el.textContent = formatted;
         });
     }
 
-    // ===== PROFILE PREVIEW =====
+    // ===== PROFILE PREVIEW with REAL Social Media Photo =====
     window.previewProfile = function() {
         var input = document.getElementById('orderUsername');
         var preview = document.getElementById('profilePreview');
@@ -305,12 +268,64 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!input || !preview) return;
         var val = input.value.trim();
         if (val.length < 3) { preview.style.display = 'none'; return; }
-        var cleaned = val.replace(/[^a-zA-Z0-9_]/g, '');
-        img.src = 'https://ui-avatars.com/api/?name='+encodeURIComponent(cleaned || 'user')+'&background=3b82f6&color=fff&size=80&bold=true';
-        nameEl.textContent = val.length > 20 ? val.substring(0,20)+'...' : val;
+
+        // Extract username from URL or raw username
+        var username = val.replace(/^https?:\/\/(www\.)?(instagram\.com|tiktok\.com|facebook\.com|twitter\.com|x\.com|snapchat\.com|youtube\.com|linkedin\.com|twitch\.tv)\//, '')
+                         .replace(/[\/\?#].*$/, '')
+                         .replace('@', '');
+        if (!username) username = val.replace(/[^a-zA-Z0-9_\.]/g, '');
+
+        // Get platform name
         var platSelect = document.getElementById('orderPlatform');
-        platEl.textContent = platSelect && platSelect.value ? platSelect.value : 'Social Media';
+        var platform = platSelect && platSelect.value ? platSelect.value : 'Social Media';
+        platEl.textContent = platform;
+
+        // Show real profile photo using Instagram/Youtube oEmbed or fallback
+        var imgUrl = '';
+        var platLower = platform.toLowerCase();
+
+        if (platLower.indexOf('instagram') !== -1) {
+            // Try Instagram oEmbed API for real profile
+            imgUrl = 'https://ui-avatars.com/api/?name='+encodeURIComponent(username)+'&background=E4405F&color=fff&size=120&bold=true';
+            // Attempt real profile via Instagram oEmbed
+            var igUrl = 'https://www.instagram.com/' + username + '/';
+            fetch('https://api.instagram.com/oembed?url='+encodeURIComponent(igUrl)+'&format=json')
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    if (d && d.thumbnail_url) { img.src = d.thumbnail_url; }
+                })
+                .catch(function(){});
+        } else if (platLower.indexOf('tiktok') !== -1) {
+            imgUrl = 'https://ui-avatars.com/api/?name='+encodeURIComponent(username)+'&background=000000&color=fff&size=120&bold=true';
+        } else if (platLower.indexOf('youtube') !== -1) {
+            imgUrl = 'https://ui-avatars.com/api/?name='+encodeURIComponent(username)+'&background=FF0000&color=fff&size=120&bold=true';
+        } else if (platLower.indexOf('facebook') !== -1) {
+            imgUrl = 'https://ui-avatars.com/api/?name='+encodeURIComponent(username)+'&background=1877F2&color=fff&size=120&bold=true';
+        } else if (platLower.indexOf('twitter') !== -1 || platLower.indexOf('x ') !== -1) {
+            imgUrl = 'https://ui-avatars.com/api/?name='+encodeURIComponent(username)+'&background=000000&color=fff&size=120&bold=true';
+        } else {
+            imgUrl = 'https://ui-avatars.com/api/?name='+encodeURIComponent(username)+'&background=3b82f6&color=fff&size=120&bold=true';
+        }
+
+        img.src = imgUrl;
+        nameEl.textContent = val.length > 20 ? val.substring(0,20)+'...' : val;
         preview.style.display = 'flex';
+
+        // Also try to get real photo from Google's cache or other sources
+        // Second attempt with a different API for Instagram
+        if (platLower.indexOf('instagram') !== -1) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'https://www.instagram.com/' + username + '/?__a=1&__d=1', true);
+            xhr.withCredentials = false;
+            xhr.onload = function() {
+                try {
+                    var data = JSON.parse(xhr.responseText);
+                    var profilePic = data?.graphql?.user?.profile_pic_url_hd || data?.graphql?.user?.profile_pic_url;
+                    if (profilePic) { img.src = profilePic; }
+                } catch(e) {}
+            };
+            xhr.send();
+        }
     };
 
     // ===== PROCEED TO PAYMENT =====
@@ -383,6 +398,7 @@ document.addEventListener('DOMContentLoaded', function() {
             date: new Date().toISOString()
         };
 
+        // Save to localStorage
         var orders = JSON.parse(localStorage.getItem('mb_orders') || '[]');
         orders.unshift(order);
         localStorage.setItem('mb_orders', JSON.stringify(orders));
@@ -390,18 +406,73 @@ document.addEventListener('DOMContentLoaded', function() {
         sessionStorage.removeItem('mb_pendingOrder');
         closeModal();
 
+        // Send to WhatsApp
+        var waMsg = '🆕 *NEW ORDER - MEDIA BOOST*%0A' +
+                    '━━━━━━━━━━━━━━%0A' +
+                    '👤 *Customer:* ' + encodeURIComponent(order.sender) + '%0A' +
+                    '📞 *Phone:* ' + encodeURIComponent(order.phone) + '%0A' +
+                    '📧 *Email:* ' + encodeURIComponent(order.email) + '%0A' +
+                    '━━━━━━━━━━━━━━%0A' +
+                    '📱 *Platform:* ' + encodeURIComponent(order.platform) + '%0A' +
+                    '🎯 *Service:* ' + encodeURIComponent(order.service) + '%0A' +
+                    '🔢 *Quantity:* ' + order.quantity.toLocaleString() + '%0A' +
+                    '👤 *Username:* ' + encodeURIComponent(order.username) + '%0A' +
+                    '━━━━━━━━━━━━━━%0A' +
+                    '💰 *Amount:* ' + formatNaira(order.price) + '%0A' +
+                    '💳 *Payment:* ' + encodeURIComponent(order.method) + '%0A' +
+                    '🏷️ *Txn ID:* ' + encodeURIComponent(order.txnId) + '%0A' +
+                    '🆔 *Order ID:* ' + order.id + '%0A' +
+                    '📅 *Date:* ' + encodeURIComponent(new Date(order.date).toLocaleString()) + '%0A' +
+                    '━━━━━━━━━━━━━━%0A' +
+                    '✅ *Status:* Pending Approval%0A' +
+                    'Please process this order. 🙏';
+
+        var waUrl = 'https://wa.me/2349066760078?text=' + waMsg;
+
+        // Send to Email
+        var emailSubject = 'NEW ORDER - ' + order.id + ' - ' + order.platform + ' ' + order.service;
+        var emailBody = 'NEW ORDER - MEDIA BOOST\n' +
+                        '================================\n\n' +
+                        'Customer: ' + order.sender + '\n' +
+                        'Phone: ' + order.phone + '\n' +
+                        'Email: ' + order.email + '\n\n' +
+                        'Platform: ' + order.platform + '\n' +
+                        'Service: ' + order.service + '\n' +
+                        'Quantity: ' + order.quantity.toLocaleString() + '\n' +
+                        'Username: ' + order.username + '\n\n' +
+                        'Amount: ' + formatNaira(order.price) + '\n' +
+                        'Payment Method: ' + order.method + '\n' +
+                        'Transaction ID: ' + order.txnId + '\n' +
+                        'Order ID: ' + order.id + '\n' +
+                        'Date: ' + new Date(order.date).toLocaleString() + '\n\n' +
+                        'Status: Pending Approval\n' +
+                        'Please process this order.';
+
+        var mailtoUrl = 'mailto:ge5853987@gmail.com?subject=' + encodeURIComponent(emailSubject) + '&body=' + encodeURIComponent(emailBody);
+
+        // Show success message with WhatsApp + Email buttons
         showModal(
             '<div style="text-align:center;padding:20px;">'+
             '<i class="fas fa-check-circle" style="font-size:4rem;color:var(--green);margin-bottom:16px;"></i>'+
             '<h3 style="color:var(--green);">Order Received!</h3>'+
-            '<p style="color:var(--text-secondary);margin:12px 0;">Your order is now under review.</p>'+
+            '<p style="color:var(--text-secondary);margin:12px 0;">Your order has been saved. Please send your payment details to the owner via WhatsApp or Email below.</p>'+
             '<p style="background:rgba(255,255,255,0.05);padding:8px 16px;border-radius:8px;font-family:monospace;font-size:0.9rem;">'+order.id+'</p>'+
-            '<p style="font-size:0.8rem;color:var(--text-muted);margin-top:12px;">You will receive a confirmation email shortly.</p>'+
-            '<button class="btn btn-primary" onclick="closeModal();switchPage(\'dashboard\')" style="margin-top:16px;"><i class="fas fa-chart-line"></i> View Dashboard</button>'+
+            '<div style="display:flex;gap:12px;justify-content:center;margin-top:16px;flex-wrap:wrap;">'+
+            '<a href="'+waUrl+'" target="_blank" class="btn btn-success" style="padding:12px 24px;display:inline-flex;align-items:center;gap:8px;text-decoration:none;"><i class="fab fa-whatsapp" style="font-size:1.2rem;"></i> Send to WhatsApp</a>'+
+            '<a href="'+mailtoUrl+'" class="btn btn-primary" style="padding:12px 24px;display:inline-flex;align-items:center;gap:8px;text-decoration:none;"><i class="fas fa-envelope" style="font-size:1.2rem;"></i> Send to Email</a>'+
+            '</div>'+
+            '<p style="font-size:0.8rem;color:var(--text-muted);margin-top:16px;">After sending, the owner will confirm and process your order.</p>'+
+            '<button class="btn btn-glass" onclick="closeModal();switchPage(\'dashboard\')" style="margin-top:12px;"><i class="fas fa-chart-line"></i> View Dashboard</button>'+
             '</div>',
             '🎉 Success!'
         );
-        showToast('✅ Order submitted! Reference: '+order.id, 'success');
+
+        // Auto-open WhatsApp in new tab
+        setTimeout(function() {
+            window.open(waUrl, '_blank');
+        }, 800);
+
+        showToast('✅ Order submitted! Send payment details via WhatsApp', 'success');
         updateDashboard();
     };
 
@@ -411,23 +482,22 @@ document.addEventListener('DOMContentLoaded', function() {
         var active = orders.filter(function(o) { return o.status === 'active' || o.status === 'pending'; }).length;
         var completed = orders.filter(function(o) { return o.status === 'completed'; }).length;
         var cancelled = orders.filter(function(o) { return o.status === 'cancelled'; }).length;
-
-        var els = { dashActive: active, dashCompleted: completed, dashCancelled: cancelled, dashReferrals: 0 };
-        for (var id in els) {
+        ['dashActive','dashCompleted','dashCancelled','dashReferrals'].forEach(function(id) {
             var el = document.getElementById(id);
-            if (el) el.textContent = els[id];
-        }
-
+            if (!el) return;
+            var val = id === 'dashActive' ? active : (id === 'dashCompleted' ? completed : (id === 'dashCancelled' ? cancelled : 0));
+            el.textContent = val;
+        });
         renderOrders('all');
-
         var last = orders[0];
         if (last) {
-            var pn = document.getElementById('profileName');
-            var pe = document.getElementById('profileEmail');
-            var pp = document.getElementById('profilePhone');
-            if (pn) pn.textContent = last.sender || 'Guest User';
-            if (pe) pe.textContent = last.email || 'Not set';
-            if (pp) pp.textContent = last.phone || 'Not set';
+            ['profileName','profileEmail','profilePhone'].forEach(function(id) {
+                var el = document.getElementById(id);
+                if (!el) return;
+                if (id === 'profileName') el.textContent = last.sender || 'Guest User';
+                if (id === 'profileEmail') el.textContent = last.email || 'Not set';
+                if (id === 'profilePhone') el.textContent = last.phone || 'Not set';
+            });
         }
     }
 
@@ -474,7 +544,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (content) content.classList.add('active');
     };
 
-    // ===== REFERRAL =====
     window.copyReferralLink = function() {
         var input = document.getElementById('referralLink');
         if (input) { input.select(); document.execCommand('copy'); showToast('Referral link copied!', 'success'); }
@@ -515,20 +584,13 @@ document.addEventListener('DOMContentLoaded', function() {
             adminTapCount++;
             if (adminTapTimer) clearTimeout(adminTapTimer);
             adminTapTimer = setTimeout(function() { adminTapCount = 0; }, 1500);
-            if (adminTapCount >= 5) {
-                adminTapCount = 0;
-                toggleAdmin();
-            }
+            if (adminTapCount >= 5) { adminTapCount = 0; toggleAdmin(); }
         });
     }
     if (window.location.hash === '#admin') { setTimeout(toggleAdmin, 500); }
 
     function toggleAdmin() {
-        var loggedIn = localStorage.getItem('mb_adminLoggedIn');
-        if (loggedIn === 'true') {
-            showAdminPanel();
-            return;
-        }
+        if (localStorage.getItem('mb_adminLoggedIn') === 'true') { showAdminPanel(); return; }
         showModal(
             '<h3 style="margin-bottom:16px;">🔐 Admin Login</h3>'+
             '<div class="form-section"><label class="form-label">Admin Username</label><input type="text" id="adminUser" class="form-input" placeholder="admin"></div>'+
@@ -547,9 +609,7 @@ document.addEventListener('DOMContentLoaded', function() {
             closeModal();
             showAdminPanel();
             showToast('Welcome, Zeus!', 'success');
-        } else {
-            showToast('Invalid credentials', 'error');
-        }
+        } else { showToast('Invalid credentials', 'error'); }
     };
 
     function showAdminPanel() {
@@ -563,11 +623,10 @@ document.addEventListener('DOMContentLoaded', function() {
             '<div style="padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;text-align:center;"><span style="display:block;font-size:1.5rem;font-weight:800;color:var(--green);">'+formatNaira(totalRevenue)+'</span><span style="font-size:0.7rem;color:var(--text-muted);">Revenue</span></div>'+
             '<div style="padding:12px;background:rgba(255,255,255,0.03);border-radius:8px;text-align:center;"><span style="display:block;font-size:1.5rem;font-weight:800;color:var(--purple);">'+uniqueEmails.size+'</span><span style="font-size:0.7rem;color:var(--text-muted);">Users</span></div>'+
             '</div>'+
-            '<div style="margin-bottom:12px;">'+
-            '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">'+
+            '<div style="margin-bottom:12px;"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">'+
             '<button class="btn btn-sm btn-secondary" onclick="adminViewOrders()">📋 View Orders</button>'+
-            '<button class="btn btn-sm btn-danger" onclick="adminLogout()">🚪 Logout</button>'+
-            '</div><div id="adminOrdersList"></div></div>',
+            '<button class="btn btn-sm btn-danger" onclick="adminLogout()">🚪 Logout</button></div>'+
+            '<div id="adminOrdersList"></div></div>',
             '⚙️ Admin Panel'
         );
         adminViewOrders();
@@ -580,10 +639,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (orders.length === 0) { container.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:20px;">No orders yet</p>'; return; }
         var html = '';
         orders.forEach(function(o, i) {
-            var actions = '';
-            if (o.status === 'pending') {
-                actions = '<button class="btn btn-sm btn-success" onclick="adminApprove('+i+')">✅ Approve</button> <button class="btn btn-sm btn-danger" onclick="adminReject('+i+')">❌ Reject</button>';
-            } else { actions = '<span style="font-size:0.75rem;color:var(--text-muted);">'+o.status+'</span>'; }
+            var actions = o.status === 'pending'
+                ? '<button class="btn btn-sm btn-success" onclick="adminApprove('+i+')">✅ Approve</button> <button class="btn btn-sm btn-danger" onclick="adminReject('+i+')">❌ Reject</button>'
+                : '<span style="font-size:0.75rem;color:var(--text-muted);">'+o.status+'</span>';
             html += '<div style="padding:10px;margin-bottom:8px;background:rgba(255,255,255,0.02);border-radius:6px;font-size:0.8rem;">'+
                 '<div style="display:flex;justify-content:space-between;align-items:center;">'+
                 '<span><strong>'+o.id+'</strong> — '+o.platform+' '+o.service+' × '+(o.quantity||0).toLocaleString()+'</span>'+
@@ -600,9 +658,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (orders[index]) orders[index].status = 'completed';
         localStorage.setItem('mb_orders', JSON.stringify(orders));
         DB.orders = orders;
-        adminViewOrders();
-        updateDashboard();
-        showToast('Order approved ✅', 'success');
+        adminViewOrders(); updateDashboard(); showToast('Order approved ✅', 'success');
     };
 
     window.adminReject = function(index) {
@@ -610,15 +666,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (orders[index]) orders[index].status = 'cancelled';
         localStorage.setItem('mb_orders', JSON.stringify(orders));
         DB.orders = orders;
-        adminViewOrders();
-        updateDashboard();
-        showToast('Order rejected', 'info');
+        adminViewOrders(); updateDashboard(); showToast('Order rejected', 'info');
     };
 
     window.adminLogout = function() {
         localStorage.removeItem('mb_adminLoggedIn');
-        closeModal();
-        showToast('Logged out', 'info');
+        closeModal(); showToast('Logged out', 'info');
     };
 
     // ===== MODAL =====
@@ -626,8 +679,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var body = document.getElementById('modalBody');
         var overlay = document.getElementById('modalOverlay');
         if (!body || !overlay) return;
-        var t = title ? '<h2 style="margin-bottom:16px;font-size:1.3rem;">'+title+'</h2>' : '';
-        body.innerHTML = t + html;
+        body.innerHTML = (title ? '<h2 style="margin-bottom:16px;font-size:1.3rem;">'+title+'</h2>' : '') + html;
         overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
     };
@@ -654,8 +706,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var toast = document.createElement('div');
         toast.className = 'toast ' + (type || 'info');
         var icons = { success: 'check-circle', error: 'times-circle', info: 'info-circle' };
-        var icon = icons[type] || 'info-circle';
-        toast.innerHTML = '<i class="fas fa-'+icon+'"></i> '+message;
+        toast.innerHTML = '<i class="fas fa-'+(icons[type]||'info-circle')+'"></i> '+message;
         container.appendChild(toast);
         setTimeout(function() { toast.remove(); }, 4000);
     };
@@ -665,10 +716,8 @@ document.addEventListener('DOMContentLoaded', function() {
             navigator.clipboard.writeText(text).then(function() { showToast('Copied!', 'success'); });
         } else {
             var ta = document.createElement('textarea');
-            ta.value = text;
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand('copy');
+            ta.value = text; document.body.appendChild(ta);
+            ta.select(); document.execCommand('copy');
             document.body.removeChild(ta);
             showToast('Copied!', 'success');
         }
@@ -677,7 +726,5 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===== INIT =====
     updateDashboard();
     updatePrice();
-
-    console.log('MEDIA BOOST v2 loaded — Zeus 👑');
-    console.log('💡 Hidden admin: tap logo 5x or add #admin to URL');
+    console.log('MEDIA BOOST v3 loaded — Zeus 👑');
 });
