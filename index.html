@@ -159,16 +159,11 @@
                         <select id="orderService" class="form-select"><option value="">Select platform first...</option></select>
                     </div>
                     <div class="form-section">
-                        <label class="form-label">Quantity</label>
-                        <div class="qty-selector">
-                            <button class="qty-btn" onclick="adjustQty(-100)">−100</button>
-                            <button class="qty-btn" onclick="adjustQty(-10)">−10</button>
-                            <input type="number" id="orderQuantity" class="form-input qty-input" value="100" min="10" max="100000" readonly>
-                            <button class="qty-btn" onclick="adjustQty(10)">+10</button>
-                            <button class="qty-btn" onclick="adjustQty(100)">+100</button>
-                        </div>
+                        <label class="form-label">Quantity (how many do you want?)</label>
+                        <input type="number" id="orderQuantity" class="form-input" value="100" min="1" max="1000000" oninput="updatePrice()" onchange="updatePrice()" style="font-size:1.1rem;font-weight:700;">
+                        <p style="font-size:0.7rem;color:var(--text-muted);margin-top:4px;">Minimum: 10 | Example: 1000 followers = ₦10,000</p>
                     </div>
-                    <!-- PRICE SHOWN HERE after selection -->
+                    <!-- PRICE SHOWN LIVE -->
                     <div class="price-display" id="priceDisplay">
                         <span class="price-label">Total Price:</span>
                         <span class="price-amount" id="totalPrice">₦0</span>
@@ -189,7 +184,7 @@
                         <input type="email" id="orderEmail" class="form-input" placeholder="your@email.com">
                     </div>
                     <button class="btn btn-primary btn-glow btn-full btn-lg" onclick="proceedToPayment()">
-                        <i class="fas fa-credit-card"></i> Proceed to Payment — <span id="priceBtn">₦600</span>
+                        <i class="fas fa-credit-card"></i> Proceed to Payment — <span id="priceBtn">₦0</span>
                     </button>
                 </div>
             </div>
@@ -356,7 +351,7 @@
         <footer class="app-footer">
             <div class="footer-inner">
                 <p>© 2026 <strong>MEDIA BOOST</strong> — Built with ❤️ by <strong>Zeus</strong> 👑</p>
-                <p>Contact: <a href="mailto:ge5853987@gmail.com">ge5853987@gmail.com</a></p>
+                <p>Contact: <a href="mailto:ge5853987@gmail.com">ge5853987@gmail.com</a> | WhatsApp: <a href="https://wa.me/2349066760078" target="_blank">09066760078</a></p>
             </div>
         </footer>
 
