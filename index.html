@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <!-- ===== PRELOADER ===== -->
+    <!-- PRELOADER -->
     <div id="preloader" class="preloader">
         <div class="preloader-content">
             <div class="preloader-logo">MB</div>
@@ -21,16 +21,14 @@
         </div>
     </div>
 
-    <!-- ===== MAIN WRAPPER ===== -->
+    <!-- APP WRAPPER -->
     <div id="app">
 
-        <!-- ===== TOP HEADER BAR ===== -->
+        <!-- TOP HEADER -->
         <header class="app-header">
             <div class="header-left">
-                <button id="menuToggle" class="header-btn" aria-label="Menu">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <a href="#home" class="header-brand" id="brandLink">
+                <button id="menuToggle" class="header-btn" aria-label="Menu"><i class="fas fa-bars"></i></button>
+                <a href="#" class="header-brand" id="brandLink">
                     <span class="brand-icon">🚀</span>
                     <span class="brand-text">MEDIA BOOST</span>
                 </a>
@@ -40,7 +38,7 @@
             </div>
         </header>
 
-        <!-- ===== SIDEBAR (Slide Menu) ===== -->
+        <!-- SIDEBAR -->
         <nav id="sidebar" class="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">MB</div>
@@ -63,36 +61,18 @@
         </nav>
         <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
-        <!-- ===== BOTTOM TAB BAR ===== -->
+        <!-- BOTTOM TAB BAR -->
         <nav class="bottom-tabs" id="bottomTabs">
-            <a href="#home" class="tab-link active" data-section="home">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </a>
-            <a href="#services" class="tab-link" data-section="services">
-                <i class="fas fa-th-large"></i>
-                <span>Services</span>
-            </a>
-            <a href="#order" class="tab-link" data-section="order">
-                <i class="fas fa-shopping-cart"></i>
-                <span>Order</span>
-            </a>
-            <a href="#dashboard" class="tab-link" data-section="dashboard">
-                <i class="fas fa-chart-line"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="#more" class="tab-link" data-section="more" id="moreTab">
-                <i class="fas fa-ellipsis-h"></i>
-                <span>More</span>
-            </a>
+            <a href="#home" class="tab-link active" data-section="home"><i class="fas fa-home"></i><span>Home</span></a>
+            <a href="#services" class="tab-link" data-section="services"><i class="fas fa-th-large"></i><span>Services</span></a>
+            <a href="#order" class="tab-link" data-section="order"><i class="fas fa-shopping-cart"></i><span>Order</span></a>
+            <a href="#dashboard" class="tab-link" data-section="dashboard"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
+            <a href="#more" class="tab-link" data-section="more" id="moreTab"><i class="fas fa-ellipsis-h"></i><span>More</span></a>
         </nav>
 
-        <!-- ===== CONTENT PAGES ===== -->
-
-        <!-- --- PAGE: HOME --- -->
+        <!-- ==================== PAGE: HOME ==================== -->
         <section id="page-home" class="page active">
             <div class="page-inner">
-                <!-- Hero -->
                 <div class="hero-section">
                     <div class="hero-badge">🚀 Premium Growth Engine</div>
                     <h1 class="hero-title">MEDIA <span class="gradient-text">BOOST</span></h1>
@@ -102,16 +82,12 @@
                         <a href="#tools" class="btn btn-glass btn-lg section-link"><i class="fas fa-tools"></i> Free Tools</a>
                     </div>
                 </div>
-
-                <!-- Counters -->
                 <div class="counters-grid">
                     <div class="counter-card"><div class="counter-icon">📦</div><div class="counter-number" id="totalOrders">0</div><div class="counter-label">Orders Completed</div></div>
                     <div class="counter-card"><div class="counter-icon">😊</div><div class="counter-number" id="totalCustomers">0</div><div class="counter-label">Happy Customers</div></div>
                     <div class="counter-card"><div class="counter-icon">🌍</div><div class="counter-number" id="totalCountries">0</div><div class="counter-label">Countries Served</div></div>
                     <div class="counter-card"><div class="counter-icon">👥</div><div class="counter-number" id="totalUsers">0</div><div class="counter-label">Active Users</div></div>
                 </div>
-
-                <!-- How it Works -->
                 <div class="home-section">
                     <h2 class="section-title">How It Works</h2>
                     <div class="steps-row">
@@ -121,8 +97,6 @@
                         <div class="step-item"><div class="step-num">4</div><h4>Pay & Grow</h4><p>Secure checkout, fast delivery</p></div>
                     </div>
                 </div>
-
-                <!-- Why Us -->
                 <div class="home-section">
                     <h2 class="section-title">Why MEDIA BOOST?</h2>
                     <div class="features-grid">
@@ -135,40 +109,24 @@
             </div>
         </section>
 
-        <!-- --- PAGE: SERVICES --- -->
+        <!-- ==================== PAGE: SERVICES ==================== -->
         <section id="page-services" class="page">
             <div class="page-inner">
-                <div class="page-header">
-                    <h2>Our Services</h2>
-                    <p>Choose your platform and service below. All prices in <strong>🇳🇬 Naira</strong></p>
+                <div class="page-header"><h2>Our Services</h2><p>Choose your platform and service below. All prices in <strong>🇳🇬 Naira</strong></p></div>
+                <div class="pricing-banner">
+                    <div class="pricing-banner-item"><span>👥 Followers</span><strong>₦1,000</strong><small>/100</small></div>
+                    <div class="pricing-banner-item"><span>👁️ Views</span><strong>₦600</strong><small>/100</small></div>
+                    <div class="pricing-banner-item"><span>❤️ Likes</span><strong>₦600</strong><small>/100</small></div>
                 </div>
-
-                <!-- Platform Filter -->
                 <div class="services-filter" id="servicesFilter"></div>
-
-                <!-- Services Grid -->
                 <div class="services-grid" id="servicesGrid"></div>
-
-                <!-- Pricing Guide -->
-                <div class="pricing-guide">
-                    <h3>💰 Pricing Guide</h3>
-                    <div class="pricing-cards">
-                        <div class="pricing-card"><div class="price-icon">👥</div><h4>Followers / Subscribers</h4><p class="pricing-rate"><strong>₦1,000</strong> per 100</p></div>
-                        <div class="pricing-card"><div class="price-icon">👁️</div><h4>Views / Visits</h4><p class="pricing-rate"><strong>₦600</strong> per 100</p></div>
-                        <div class="pricing-card"><div class="price-icon">❤️</div><h4>Likes / Comments / Reactions</h4><p class="pricing-rate"><strong>₦600</strong> per 100</p></div>
-                    </div>
-                </div>
             </div>
         </section>
 
-        <!-- --- PAGE: ORDER --- -->
+        <!-- ==================== PAGE: ORDER ==================== -->
         <section id="page-order" class="page">
             <div class="page-inner">
-                <div class="page-header">
-                    <h2>Place Your Order</h2>
-                    <p>Fill in the details below</p>
-                </div>
-
+                <div class="page-header"><h2>Place Your Order</h2><p>Fill in the details below</p></div>
                 <div class="order-card">
                     <div class="form-section">
                         <label class="form-label">Platform</label>
@@ -196,14 +154,10 @@
                             <option value="Discord">💬 Discord</option>
                         </select>
                     </div>
-
                     <div class="form-section">
                         <label class="form-label">Service Type</label>
-                        <select id="orderService" class="form-select">
-                            <option value="">Select platform first...</option>
-                        </select>
+                        <select id="orderService" class="form-select"><option value="">Select platform first...</option></select>
                     </div>
-
                     <div class="form-section">
                         <label class="form-label">Quantity</label>
                         <div class="qty-selector">
@@ -214,17 +168,14 @@
                             <button class="qty-btn" onclick="adjustQty(100)">+100</button>
                         </div>
                     </div>
-
-                    <!-- PRICE DISPLAY -->
+                    <!-- PRICE SHOWN HERE after selection -->
                     <div class="price-display" id="priceDisplay">
                         <span class="price-label">Total Price:</span>
                         <span class="price-amount" id="totalPrice">₦0</span>
                     </div>
-
                     <div class="form-section">
                         <label class="form-label">Username or Profile Link</label>
                         <input type="text" id="orderUsername" class="form-input" placeholder="e.g. @username or https://instagram.com/..." oninput="previewProfile()">
-                        <!-- PROFILE PREVIEW -->
                         <div id="profilePreview" class="profile-preview" style="display:none;">
                             <img id="profilePreviewImg" src="" alt="Profile">
                             <div class="profile-preview-info">
@@ -233,12 +184,10 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="form-section">
                         <label class="form-label">Email (for updates)</label>
                         <input type="email" id="orderEmail" class="form-input" placeholder="your@email.com">
                     </div>
-
                     <button class="btn btn-primary btn-glow btn-full btn-lg" onclick="proceedToPayment()">
                         <i class="fas fa-credit-card"></i> Proceed to Payment — <span id="priceBtn">₦600</span>
                     </button>
@@ -246,14 +195,10 @@
             </div>
         </section>
 
-        <!-- --- PAGE: PAYMENT --- -->
+        <!-- ==================== PAGE: PAYMENT ==================== -->
         <section id="page-payment" class="page">
             <div class="page-inner">
-                <div class="page-header">
-                    <h2>💳 Secure Payment</h2>
-                    <p>Choose your payment method</p>
-                </div>
-
+                <div class="page-header"><h2>💳 Secure Payment</h2><p>Choose your payment method</p></div>
                 <div class="payment-card">
                     <div class="payment-method">
                         <div class="payment-method-header">
@@ -267,7 +212,6 @@
                             <p><strong>Amount to Pay:</strong> <span class="pay-amount" id="payAmount">₦0</span></p>
                         </div>
                     </div>
-
                     <div class="payment-method">
                         <div class="payment-method-header">
                             <i class="fas fa-mobile-alt"></i>
@@ -280,9 +224,7 @@
                             <p><strong>Amount to Pay:</strong> <span class="pay-amount" id="payAmountMoMo">₦0</span></p>
                         </div>
                     </div>
-
                     <div class="payment-divider"><span>After payment, click below</span></div>
-
                     <button class="btn btn-success btn-glow btn-full btn-lg" onclick="openConfirmOrder()">
                         <i class="fas fa-check-double"></i> I Have Paid
                     </button>
@@ -290,27 +232,21 @@
             </div>
         </section>
 
-        <!-- --- PAGE: DASHBOARD --- -->
+        <!-- ==================== PAGE: DASHBOARD ==================== -->
         <section id="page-dashboard" class="page">
             <div class="page-inner">
-                <div class="page-header">
-                    <h2>📊 Your Dashboard</h2>
-                    <p>Track your orders and activity</p>
-                </div>
-
+                <div class="page-header"><h2>📊 Your Dashboard</h2><p>Track your orders and activity</p></div>
                 <div class="dash-stats">
                     <div class="dash-stat-card"><i class="fas fa-spinner"></i><span class="dash-stat-num" id="dashActive">0</span><span class="dash-stat-label">Active</span></div>
                     <div class="dash-stat-card"><i class="fas fa-check-circle"></i><span class="dash-stat-num" id="dashCompleted">0</span><span class="dash-stat-label">Completed</span></div>
                     <div class="dash-stat-card"><i class="fas fa-times-circle"></i><span class="dash-stat-num" id="dashCancelled">0</span><span class="dash-stat-label">Cancelled</span></div>
                     <div class="dash-stat-card"><i class="fas fa-gift"></i><span class="dash-stat-num" id="dashReferrals">0</span><span class="dash-stat-label">Referrals</span></div>
                 </div>
-
                 <div class="dash-tabs">
                     <button class="dash-tab active" onclick="switchDashTab('orders')">📋 Orders</button>
                     <button class="dash-tab" onclick="switchDashTab('profile')">👤 Profile</button>
                     <button class="dash-tab" onclick="switchDashTab('referrals')">🎁 Referrals</button>
                 </div>
-
                 <div id="dashOrders" class="dash-content active">
                     <div class="dash-filter">
                         <button class="dash-filter-btn active" onclick="filterOrders('all')">All</button>
@@ -320,7 +256,6 @@
                     </div>
                     <div id="ordersList" class="orders-list"><p class="empty-state">No orders yet. Place your first order above!</p></div>
                 </div>
-
                 <div id="dashProfile" class="dash-content">
                     <div class="profile-card">
                         <div class="profile-avatar"><i class="fas fa-user-circle"></i></div>
@@ -332,7 +267,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div id="dashReferrals" class="dash-content">
                     <div class="referral-card">
                         <h4>🎁 Refer & Earn</h4>
@@ -347,21 +281,17 @@
             </div>
         </section>
 
-        <!-- --- PAGE: TOOLS --- -->
+        <!-- ==================== PAGE: TOOLS ==================== -->
         <section id="page-tools" class="page">
             <div class="page-inner">
-                <div class="page-header">
-                    <h2>🛠️ Free Tools</h2>
-                    <p>32+ free utilities and engagement tools</p>
-                </div>
+                <div class="page-header"><h2>🛠️ Free Tools</h2><p>32+ free utilities + 6 free social media engagement tools</p></div>
                 <div class="tools-grid" id="toolsGrid"></div>
             </div>
         </section>
 
-        <!-- --- PAGE: MORE (Reviews + FAQ) --- -->
+        <!-- ==================== PAGE: MORE ==================== -->
         <section id="page-more" class="page">
             <div class="page-inner">
-                <!-- Reviews -->
                 <div class="page-header"><h2>⭐ What Our Customers Say</h2></div>
                 <div class="reviews-grid">
                     <div class="review-card">
@@ -385,8 +315,6 @@
                         <div class="review-author"><img src="https://i.pravatar.cc/40?img=4" alt="David"><div><strong>David Adeleke</strong><span>YouTuber</span></div></div>
                     </div>
                 </div>
-
-                <!-- FAQ -->
                 <div class="page-header" style="margin-top:40px;"><h2>❓ Frequently Asked Questions</h2></div>
                 <div class="faq-list">
                     <div class="faq-item active">
@@ -413,7 +341,7 @@
             </div>
         </section>
 
-        <!-- ===== MODAL ===== -->
+        <!-- MODAL -->
         <div id="modalOverlay" class="modal-overlay">
             <div class="modal-content" id="modalContent">
                 <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
@@ -421,10 +349,10 @@
             </div>
         </div>
 
-        <!-- ===== TOAST CONTAINER ===== -->
+        <!-- TOAST -->
         <div id="toastContainer" class="toast-container"></div>
 
-        <!-- ===== FOOTER ===== -->
+        <!-- FOOTER -->
         <footer class="app-footer">
             <div class="footer-inner">
                 <p>© 2026 <strong>MEDIA BOOST</strong> — Built with ❤️ by <strong>Zeus</strong> 👑</p>
@@ -434,7 +362,6 @@
 
     </div>
 
-    <!-- Scripts -->
     <script src="main.js"></script>
     <script src="tools.js"></script>
 </body>
