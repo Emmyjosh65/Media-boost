@@ -601,4 +601,20 @@ document.addEventListener('DOMContentLoaded', function() {
     updatePrice();
     console.log('MEDIA BOOST v4 loaded — Zeus 👑');
     console.log('🔑 Admin: tap logo 5x or Ctrl+Shift+A');
+    // ===== EMERGENCY ADMIN BYPASS (always works - even from old cache) =====
+window.bypassAdmin = function() {
+    localStorage.setItem('mb_adminLoggedIn', 'true');
+    closeModal();
+    showAdminPanel();
+    showToast('Bypassed! Welcome Zeus 👑', 'success');
+};
+// If #admin is in URL, try bypass after 3 seconds
+if (window.location.hash === '#admin') {
+    setTimeout(function() {
+        // Try normal first, then bypass
+        if (!document.querySelector('.modal-overlay.active')) {
+            window.bypassAdmin();
+        }
+    }, 3000);
+}
 });
